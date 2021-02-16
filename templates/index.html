@@ -1,9 +1,23 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Task Manager
+Task Manager
 {% endblock %}
 
 {% block main %}
-<h1 class="pageTitle">Welcome to Task Manager App!</h1>
+<center>
+    <h1 class="pageTitle">Welcome to Task Manager App!</h1>
+    <form action="/edit_task" method="GET">
+        <table>
+            <tr>Current task</tr>
+            <tr>
+                <td>Task name</td>
+                <td>Comment</td>
+                <td>Who delivered it</td>
+                <td>Deadline</td>
+            </tr>
+        </table>
+        <button>EDIT</button>
+    </form>
+</center>
 {% endblock %}

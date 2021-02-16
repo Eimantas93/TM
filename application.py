@@ -59,3 +59,9 @@ def login():
         # Here should be set session user ID
         # session["user_id"] = rows[0]["user_id"]
         return render_template("index.html")
+
+
+@app.route("/edit_task", methods=["GET, POST"])
+def edit_task():
+    if request.method == "GET"
+    # return render_template("edit_task.html")
