@@ -9,7 +9,7 @@ con = connection.cursor()
 
 @app.route("/")
 def hello():
-    return render_template("index.html")
+    return render_template("layout.html")
 
 
 @app.route("/register", methods=["POST"])
@@ -21,4 +21,3 @@ def register():
 
     connection.commit()
     connection.close()
-    return render_template("test.html", username=username, password=password)
