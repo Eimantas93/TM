@@ -20,14 +20,20 @@ def register():
         connection = sqlite3.connect('data.db')
         # Getting username and password from registration form
         username = request.form.get("username")
+        position = request.form.get("position")
+        supervisor = request.form.get("supervisor")
         password = request.form.get("password")
+        password2 = request.form.get("password2")
+
+        if password != password2:
+            return "error"
 
         # Hashing password
         hashed_password = generate_password_hash(password)
 
         # Registering user to DB
-        connection.execute("INSERT INTO users (name, hash) VALUES(?, ?)",
-                           (username, hashed_password))
+        connection.execute("INSERT INTO users (name, hash, position) VALUES(?, ?, ?)",
+                           (username, hashed_password, position))
         connection.commit()
         connection.close()
         # return render_template("index.html" ???session???)
