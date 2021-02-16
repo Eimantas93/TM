@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, url_for, redirect
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from datetime import timedelta
 
 app = Flask(__name__)
+# To encrypt and decrypt sessions data
+app.config['SECRET_KEY'] = 'sessions'
+# Store session data for 1 day, then log out
+app.permanent_session_lifetime = timedelta(days=1)
 
 
 @app.route("/")
@@ -39,7 +43,7 @@ def register():
         return render_template("index.html")
 
 
-@app.route("/login", methods=["GET, POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -57,8 +61,13 @@ def login():
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
             return "Error"
         # Here should be set session user ID
-        # session["user_id"] = rows[0]["user_id"]
+        session["user_id"] = rows[0]["user_id"]
         return render_template("index.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect("/")
 
 
 @app.route("/edit_task", methods=["GET, POST"])
