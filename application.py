@@ -11,7 +11,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/register", methods=["GET, POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html")
@@ -21,7 +21,6 @@ def register():
         # Getting username and password from registration form
         username = request.form.get("username")
         position = request.form.get("position")
-        supervisor = request.form.get("supervisor")
         password = request.form.get("password")
         password2 = request.form.get("password2")
 
@@ -34,9 +33,10 @@ def register():
         # Registering user to DB
         connection.execute("INSERT INTO users (name, hash, position) VALUES(?, ?, ?)",
                            (username, hashed_password, position))
+
         connection.commit()
         connection.close()
-        # return render_template("index.html" ???session???)
+        return render_template("index.html")
 
 
 @app.route("/login", methods=["GET, POST"])
@@ -63,5 +63,5 @@ def login():
 
 @app.route("/edit_task", methods=["GET, POST"])
 def edit_task():
-    if request.method == "GET"
-    # return render_template("edit_task.html")
+    if request.method == "GET":
+        return render_template("edit_task.html")
