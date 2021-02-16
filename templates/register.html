@@ -1,36 +1,35 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Registration Form
+Registration Form
 {% endblock %}
 
 {% block main %}
 <h1 class="pageTitle"> Please fill registration form below. </h1>
 <form action="/register" method="post">
-    <label>First name: </label>
-    <div class="form-group">
-      <input autocomplete="off" type="text" class="form-control" placeholder="David" name="firstName" autofocus required>
-    </div>
-    <label>Last name: </label>
-    <div class="form-group">
-      <input autocomplete="off" type="text" class="form-control" placeholder="Jobkenzo" name="lastName" required>
-    </div>
-    <label>Company name:</label>
-    <div class="form-group">
-      <input autocomplete="off" type="text" class="form-control" placeholder="Bison Office" name="companyName" required>
-    </div>
-    <label>Your position:  </label>
-    <div class="form-group">
-      <input autocomplete="off" type="text" class="form-control" placeholder="Export manager" name="position" required>
-    </div>
-    <label>Password: </label>
-    <div class="form-group">
-      <input autocomplete="off" type="password" class="form-control" placeholder="Password" name="password" required>
-    </div>
-    <label>Reapet your password: </label>
-    <div class="form-group">
-      <input autocomplete="off" type="password" class="form-control" placeholder="Repeat your password" name="passwordConfirm" required>
-    </div>
-    <button class="btn btn-primary" type="submit">Register</button>
-  </form>
+  <label>Username: </label>
+  <div class="form-group">
+    <input autocomplete="off" type="text" class="form-control" placeholder="Redbeard" name="username" autofocus
+      required>
+  </div>
+  <label>Your position: </label>
+  <div class="form-group">
+    <input autocomplete="off" type="text" class="form-control" placeholder="Captains assistant" name="position"
+      required>
+  </div>
+  <label>Your supervisor username: </label>
+  <div class="form-group">
+    <input autocomplete="off" type="text" class="form-control" placeholder="CaptainJackSparrow" name="supervisor">
+  </div>
+  <label>Password: </label>
+  <div class="form-group">
+    <input autocomplete="off" type="password" class="form-control" placeholder="Password" name="password" required>
+  </div>
+  <label>Reapet your password: </label>
+  <div class="form-group">
+    <input autocomplete="off" type="password" class="form-control" placeholder="Repeat your password" name="password2"
+      required>
+  </div>
+  <button class="btn btn-primary" type="submit">Register</button>
+</form>
 {% endblock %}
