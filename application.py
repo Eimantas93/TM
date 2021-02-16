@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello():
-    return render_template("test.html")
+def index():
+    return render_template("index.html")
 
 
 @app.route("/register", methods=["POST"])
@@ -25,4 +25,7 @@ def register():
     connection.commit()
     connection.close()
 
-    return render_template("layout.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")

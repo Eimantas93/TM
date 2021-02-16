@@ -22,7 +22,7 @@
     <link href="/static/styles.css" rel="stylesheet">
     <!-- JS main file -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <title>Hello, world! {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
 
@@ -71,7 +71,6 @@
             {% endif %} -->
         </div>
       </nav>
-      <h1>Final Project</h1>
     <main>
         {% block main %}{% endblock %}
     </main>
