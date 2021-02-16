@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Registration Form
+{% endblock %}
+
+{% block main %}
+<h1 class="pageTitle"> Please fill registration form below. </h1>
+<form action="/register" method="post">
+    <label>Name: </label>
+    <div class="form-group">
+      <input autocomplete="off" type="text" class="form-control" placeholder="Registration name" name="firstName" autofocus required>
+    </div>
+    <label>Password:  </label>
+    <div class="form-group">
+      <input autocomplete="off" type="password" class="form-control" placeholder="Password" name="password" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Log In</button>
+  </form>
+{% endblock %}
