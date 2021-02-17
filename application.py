@@ -68,6 +68,7 @@ def login():
             return render_template("login.html")
         # Setting session user ID
         session["user_id"] = rows[0]
+
         return render_template("index.html")
 
 
