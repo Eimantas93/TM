@@ -50,23 +50,31 @@ def login():
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
         # Getting username and password from login form
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Searching for username in DB
-        rows = connection.execute(
-            "SELECT * FROM users WHERE name=(?)", username)
+        # Query user data
+        db.execute("SELECT * FROM users WHERE name = ?", (username,))
+        # fetchone() Fetches the next row of a query result set, returning a single sequence, or None when no more data is available.
+        rows = db.fetchone()
+        # Checking for user
+        if not rows:
+            return render_template("login.html")
         # Checking password
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
-            return "Error"
-        # Here should be set session user ID
-        session["user_id"] = rows[0]["user_id"]
+        if not check_password_hash(rows[2], password) or not rows:
+            return render_template("login.html")
+        # Setting session user ID
+        session["user_id"] = rows[0]
         return render_template("index.html")
+
 
 @app.route("/logout")
 def logout():
-    session.pop("user_id", None)
+    # Forget any user_id
+    session.clear()
     return redirect("/")
 
 
