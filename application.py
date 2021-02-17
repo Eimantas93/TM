@@ -59,15 +59,15 @@ def login():
         # Query user data
         db.execute("SELECT * FROM users WHERE name = ?", (username,))
         # fetchone() Fetches the next row of a query result set, returning a single sequence, or None when no more data is available.
-        rows = db.fetchone()
+        row = db.fetchone()
         # Checking for user
-        if not rows:
+        if not row:
             return render_template("login.html")
         # Checking password
-        if not check_password_hash(rows[2], password) or not rows:
+        if not check_password_hash(row[2], password) or not row:
             return render_template("login.html")
         # Setting session user ID
-        session["user_id"] = rows[0]
+        session["user_id"] = row[0]
 
         return render_template("index.html")
 
@@ -79,7 +79,52 @@ def logout():
     return redirect("/")
 
 
-@app.route("/edit_task", methods=["GET, POST"])
+@app.route("/new_task", methods=["GET"])
+def new_task():
+    if request.method == "GET":
+        return render_template("new_task.html")
+
+
+@app.route("/edit_task", methods=["GET", "POST"])
 def edit_task():
     if request.method == "GET":
         return render_template("edit_task.html")
+
+
+@app.route("/relations", methods=["GET", "POST"])
+def relations():
+    if request.method == "GET":
+        return render_template("relations.html")
+    else:
+        """
+        # Connecting to DB
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
+        # Getting username and password from login form
+        supervisor = request.form.get("supervisor")
+
+        # Query user data
+        db.execute("SELECT * FROM users WHERE name = ?", (supervisor,))
+
+        # fetchone() Fetches the next row of a query result set, returning a single sequence, or None when no more data is available.
+        row = db.fetchone()
+        supervisors_id = int(row[0])
+
+        # Update supervisor in relations table
+        connection.execute("INSERT INTO relations (user_id, supervisors_id) VALUES (?, ?)",
+                           (session["user_id"], supervisors_id))
+
+        db.execute("SELECT * FROM relations WHERE user_id = ?",
+                   (supervisors_id,))
+
+        supervisors_row = db.fetchone()
+
+        if not supervisors_row:
+            connection.execute(
+                "INSERT INTO relations (user_id, subordinates_id) VALUES (?, ?)", (supervisors_id, session["user_id"]))
+
+        connection.commit()
+        connection.close()
+        return render_template("index.html")
+        """
