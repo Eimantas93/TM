@@ -12,7 +12,10 @@ app.permanent_session_lifetime = timedelta(days=1)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if session.get("user_id") is None:
+        return redirect("/login")
+    else:
+        return render_template("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
