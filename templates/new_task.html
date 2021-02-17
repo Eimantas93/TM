@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Task Manager
+{% endblock %}
+
+{% block main %}
+<center>
+    <form action="/new_task" method="post">
+        <label>Task for: </label>
+        <div class="form-group">
+            <select id="task_for">
+                <option value="me">Me</option>
+                <option value="manager">Manager</option>
+                <option value="assistant">Assistant</option>
+                <option value="designer">Designer</option>
+            </select>
+        </div>
+        <label>Task name: </label>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" placeholder="Deliver pizza" name="task_name"
+                autofocus required>
+        </div>
+        <label>Comment: </label>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control"
+                placeholder="Italian pizza to Kaunas, laisves aleja 25" name="comment">
+        </div>
+        <label>Deadline: </label>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" placeholder="2020-02-20" name="deadline">
+        </div>
+        <button class="btn btn-primary" type="submit">DELIVER</button>
+    </form>
+</center>
+{% endblock %}
