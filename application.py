@@ -87,6 +87,10 @@ def new_task():
     if request.method == "GET":
         return render_template("new_task.html")
 
+@app.route("/tasks", methods=["GET"])
+def tasks():
+    return render_template("tasks.html")
+
 
 @app.route("/edit_task", methods=["GET", "POST"])
 def edit_task():
