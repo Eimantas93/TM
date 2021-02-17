@@ -5,7 +5,9 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-<center>
+    <h1 class="pageTitle">Create new task!</h1>
+    <hr>
+    <div class="container-1">
     <form action="/new_task" method="post">
         <label>Task for: </label>
         <div class="form-group">
@@ -30,7 +32,9 @@ Task Manager
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" placeholder="2020-02-20" name="deadline">
         </div>
+        <div class="button">
         <button class="btn btn-primary" type="submit">DELIVER</button>
+        </div>
     </form>
-</center>
+    </div>
 {% endblock %}
