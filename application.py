@@ -82,7 +82,7 @@ def logout():
     return redirect("/")
 
 
-@app.route("/new_task", methods=["GET"])
+@app.route("/new_task", methods=["GET", "POST"])
 def new_task():
     if request.method == "GET":
         return render_template("new_task.html")

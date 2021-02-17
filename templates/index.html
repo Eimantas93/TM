@@ -5,9 +5,9 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-<center>
     <h1 class="pageTitle">Welcome to Task Manager App!</h1>
     <hr>
+    <div class="container-1">
     <form action="/edit_task" method="GET">
         <table>
             <tr>Current task</tr>
@@ -18,7 +18,9 @@ Task Manager
                 <td>Deadline</td>
             </tr>
         </table>
+        <div class="button">
         <button>EDIT</button>
+        </div>
     </form>
-</center>
+    </div>
 {% endblock %}
