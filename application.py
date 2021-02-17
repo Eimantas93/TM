@@ -74,12 +74,6 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.pop("user_id", None)
-    return redirect("/")
-
-
-@app.route("/logout")
-def logout():
     # Forget any user_id
     session.clear()
     return redirect("/")
