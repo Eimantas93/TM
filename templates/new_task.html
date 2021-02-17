@@ -25,13 +25,13 @@ Task Manager
         </div>
         <label>Comment: </label>
         <div class="form-group">
-            <!-- <input autocomplete="off" type="text" class="form-control"
-                placeholder="Italian pizza to Kaunas, laisves aleja 25" name="comment"> -->
-        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="textarea" type="text" name="comment"></textarea>
+            <!-- Textarea to make the comment section adjustable to input size -->
+        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text" name="comment"
+        style="height: 200px;"></textarea>
         </div>
         <label>Deadline: </label>
         <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control" placeholder="2020-02-20" name="deadline">
+            <input type="date" min="2021-02-17" value="2021-02-18" name="deadline" >
         </div>
         <div class="button">
         <button class="btn btn-primary" type="submit">DELIVER</button>
