@@ -13,26 +13,27 @@ footer {
     text-align: center;
 }
 
-.form-control
-{
-    /* center form controls */
-    display: inline-block;
-    /* override Bootstrap's 100% width for form controls */
-    width: auto;
-}
-
-main
-{
-    /* center contents */
-    text-align: center;
-}
-
 label {
     font-weight: bold;
     padding-top: 10px;
 }
 
-.btn{
+.btn {
     padding: 10px;
     margin-top: 10px;
+}
+
+/* To center the button we need to put it inside the div */
+.button {
+    text-align: center;
+}
+
+/* Push content to the center */
+.container-1 {
+    display: flex;
+    justify-content: center;
+}
+
+.form {
+    width: 60%;
 }

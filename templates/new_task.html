@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Task Manager
+Create new task
 {% endblock %}
 
 {% block main %}
-<center>
-    <form action="/new_task" method="post">
+    <h1 class="pageTitle">Create new task!</h1>
+    <hr>
+    <div class="container-1">
+    <form action="/new_task" method="post" class="form">
         <label>Task for: </label>
         <div class="form-group">
             <select id="task_for">
@@ -23,14 +25,17 @@ Task Manager
         </div>
         <label>Comment: </label>
         <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control"
-                placeholder="Italian pizza to Kaunas, laisves aleja 25" name="comment">
+            <!-- Textarea to make the comment section adjustable to input size -->
+        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text" name="comment"
+        style="height: 200px;"></textarea>
         </div>
         <label>Deadline: </label>
         <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control" placeholder="2020-02-20" name="deadline">
+            <input type="date" min="2021-02-17" value="2021-02-18" name="deadline" >
         </div>
+        <div class="button">
         <button class="btn btn-primary" type="submit">DELIVER</button>
+        </div>
     </form>
-</center>
+    </div>
 {% endblock %}

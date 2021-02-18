@@ -12,7 +12,10 @@ app.permanent_session_lifetime = timedelta(days=1)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if session.get("user_id") is None:
+        return redirect("/login")
+    else:
+        return render_template("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -80,10 +83,14 @@ def logout():
     return redirect("/")
 
 
-@app.route("/new_task", methods=["GET"])
+@app.route("/new_task", methods=["GET", "POST"])
 def new_task():
     if request.method == "GET":
         return render_template("new_task.html")
+
+@app.route("/tasks", methods=["GET"])
+def tasks():
+    return render_template("tasks.html")
 
 
 @app.route("/edit_task", methods=["GET", "POST"])

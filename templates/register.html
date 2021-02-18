@@ -6,6 +6,8 @@ Registration Form
 
 {% block main %}
 <h1 class="pageTitle"> Please fill registration form below. </h1>
+<hr>
+<div class="container-1">
 <form action="/register" method="post">
   <label>Username: </label>
   <div class="form-group">
@@ -30,6 +32,9 @@ Registration Form
     <input autocomplete="off" type="password" class="form-control" placeholder="Repeat your password" name="password2"
       required>
   </div>
+  <div class="button">
   <button class="btn btn-primary" type="submit">Register</button>
+  </div>
 </form>
+</div>
 {% endblock %}

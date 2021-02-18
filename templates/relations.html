@@ -5,14 +5,18 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-<center>
+<h1 class="pageTitle">Edit your relations.</h1>
+<hr>
+<div class="container-1">
     <form action="/relations" method="post">
         <label>Set supervisor: </label>
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" placeholder="Captain Jack Sparrow"
                 name="supervisor" autofocus required>
         </div>
+        <div class="button">
         <button class="btn btn-primary" type="submit">DELIVER</button>
+        </div>
     </form>
-</center>
+</div>
 {% endblock %}
