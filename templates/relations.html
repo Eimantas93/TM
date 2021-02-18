@@ -5,18 +5,54 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-<h1 class="pageTitle">Edit your relations.</h1>
+<h1 class="pageTitle">{{ rows[0][4] }} relations.</h1>
 <hr>
 <div class="container-1">
-    <form action="/relations" method="post">
-        <label>Set supervisor: </label>
-        <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control" placeholder="Captain Jack Sparrow"
-                name="supervisor" autofocus required>
+    <center>
+        <div>
+            <form class="border" action="/relations" method="POST">
+                <h3>Assign subordinate for supervisor</h3>
+                <label>Supervisor</label>
+                <select name="new_supervisor">
+                    {% for row in rows %}
+                    <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
+                    {% endfor %}
+                </select>
+                <label>Subordinate</label>
+                <select name="new_subordinate">
+                    {% for row in rows %}
+                    <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">ASSIGN</button>
+            </form>
         </div>
-        <div class="button">
-        <button class="btn btn-primary" type="submit">DELIVER</button>
-        </div>
-    </form>
+        <table class="border">
+            <h3>Companies empoyees list</h3>
+            <tr>
+                <td>Username</td>
+                <td>Position</td>
+                <td>Supervisor</td>
+                <td>Subordinates</td>
+            </tr>
+            {% for row in rows %}
+            <tr class="border">
+                <td class="border">
+
+                    {{ row[1] }}
+                </td>
+                <td class="border">
+                    {{ row[3] }}
+                </td>
+                <td class="border">
+                    Supervisor
+                </td>
+                <td class="border">
+                    Subordinates
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </center>
 </div>
 {% endblock %}

@@ -88,6 +88,7 @@ def new_task():
     if request.method == "GET":
         return render_template("new_task.html")
 
+
 @app.route("/tasks", methods=["GET"])
 def tasks():
     return render_template("tasks.html")
@@ -99,6 +100,14 @@ def edit_task():
         return render_template("edit_task.html")
 
 
+def assign():
+    return "ok"
+
+
+def unassign():
+    return "ok"
+
+
 @app.route("/relations", methods=["GET", "POST"])
 def relations():
     if request.method == "GET":
@@ -106,52 +115,35 @@ def relations():
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
+        # Get current user session id
         db.execute(
             "SELECT * FROM users WHERE user_id = ?", (session["user_id"],))
         user_row = db.fetchone()
 
+        # Get current user company
         db.execute("SELECT * FROM users WHERE company = ?", (user_row[4],))
         rows = db.fetchall()
 
-        return render_template("relations.html", rows=rows)
-    else:
+        # Get current user company
+        db.execute("SELECT * FROM relations")
+        relations = db.fetchall()
 
-        """
+        return render_template("relations.html", rows=rows, relations=relations)
+    else:
+        selected_supervisors_id = request.form.get("new_supervisor")
+        selected_subordinates_id = request.form.get("new_subordinate")
+
         # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
-        # Getting username and password from login form
-        supervisor = request.form.get("supervisor")
+        connection.execute("INSERT INTO relations (user_id, subordinates_id) VALUES (?, ?)",
+                           (selected_supervisors_id, selected_subordinates_id))
 
-        # Query supervisors data
-        db.execute("SELECT * FROM users WHERE name = ?", (supervisor,))
-
-        # fetchone() Fetches the next row of a query result set, returning a single sequence, or None when no more data is available.
-        row = db.fetchone()
-        supervisors_id = int(row[0])
-
-        db.execute("SELECT * FROM relations WHERE user_id = ?",
-                   (session["user_id"],))
-
-        users_row = db.fetchone()
-
-        if not users_row:
-            # Update users row in relations. Adding user_id and supervisor_id
-            connection.execute(
-                "INSERT INTO relations (user_id, supervisors_id) VALUES (?, ?)", (session["user_id"], supervisors_id))
-
-        db.execute("SELECT * FROM relations WHERE user_id = ?",
-                   (supervisors_id,))
-
-        supervisors_row = db.fetchone()
-
-        if not supervisors_row:
-            # Update supervisors row in relations. Adding user_id (supervisor) and subordinate_id (user)
-            connection.execute(
-                "INSERT INTO relations (user_id, subordinates_id) VALUES (?, ?)", (supervisors_id, session["user_id"]))
+        connection.execute("INSERT INTO relations (user_id, supervisors_id) VALUES (?, ?)",
+                           (selected_subordinates_id, selected_supervisors_id))
 
         connection.commit()
         connection.close()
-        return render_template("index.html")
-        """
+
+        return redirect(url_for("relations"))
