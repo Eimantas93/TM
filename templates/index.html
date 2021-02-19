@@ -7,8 +7,44 @@ Task Manager
 {% block main %}
     <h1 class="pageTitle">Welcome to Task Manager App!</h1>
     <hr>
-    <div class="container-1">
-    <form action="/edit_task" method="GET">
+    <h2>Ongoing tasks:</h2>
+    {% for row in rows %}
+    <div class="container-2">
+        <tr class="table-1">
+            <td class="borderTitle">Task ID</td>
+            <td class="borderValue">{{ row[0] }}</td>
+        </tr>
+        <tr class="table-1">
+            <td class="borderTitle">Creator ID</td>
+            <td class="borderValue">{{ row[1] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Executor ID</td>
+            <td class="borderValue">{{ row[2] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Heading</td>
+            <td class="borderValue">{{ row[3] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Description</td>
+            <td class="borderValue">{{ row[4] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Creation Date</td>
+            <td class="borderValue">{{ row[5] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Deadline</td>
+            <td class="borderValue">{{ row[6] }}</td>
+        </tr>
+        <tr>
+            <td class="borderTitle">Status</td>
+            <td class="borderValue">{{ row[7] }}</td>
+        </tr>
+    </div>
+    {% endfor %}
+    <!-- <form action="/edit_task" method="GET">
         <table>
             <tr>Current task</tr>
             <tr>
@@ -21,6 +57,5 @@ Task Manager
         <div class="button">
         <button>EDIT</button>
         </div>
-    </form>
-    </div>
+    </form> -->
 {% endblock %}

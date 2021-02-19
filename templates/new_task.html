@@ -11,27 +11,27 @@ Create new task
     <form action="/new_task" method="post" class="form">
         <label>Task for: </label>
         <div class="form-group">
-            <select id="task_for">
-                <option value="me">Me</option>
-                <option value="manager">Manager</option>
-                <option value="assistant">Assistant</option>
-                <option value="designer">Designer</option>
+            <select id="task_for" name="task_for">
+                <option value="1">Me</option>
+                <option value="2">Manager</option>
+                <option value="3">Assistant</option>
+                <option value="4">Designer</option>
             </select>
         </div>
         <label>Task name: </label>
         <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control" placeholder="Deliver pizza" name="task_name"
+            <input autocomplete="off" type="text" class="form-control" placeholder="Deliver pizza" name="heading"
                 autofocus required>
         </div>
-        <label>Comment: </label>
+        <label>Task description: </label>
         <div class="form-group">
             <!-- Textarea to make the comment section adjustable to input size -->
-        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text" name="comment"
-        style="height: 200px;"></textarea>
+        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text" name="description"
+        style="height: 200px;" required></textarea>
         </div>
         <label>Deadline: </label>
         <div class="form-group">
-            <input type="date" min="2021-02-17" value="2021-02-18" name="deadline" >
+            <input type="date" min="2021-02-17" value="2021-02-18" name="deadline" required>
         </div>
         <div class="button">
         <button class="btn btn-primary" type="submit">DELIVER</button>

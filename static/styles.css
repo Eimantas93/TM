@@ -1,6 +1,4 @@
 footer {
-    bottom: 0;
-    position:absolute;
     width: 100%;
     background-color: rgb(33,37,41);
     height: 30px;
@@ -36,4 +34,19 @@ label {
 
 .form {
     width: 60%;
+}
+
+.container-2 {
+    display: inline-table;
+    flex-direction: column;
+}
+
+.table-1 {
+    display: flex;
+}
+
+.borderTitle {
+    display: flex;
+    width: 50%;
+    border: 1px solid black;
 }
