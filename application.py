@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, url_for, redirect
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 app = Flask(__name__)
 # To encrypt and decrypt sessions data
@@ -15,7 +15,15 @@ def index():
     if session.get("user_id") is None:
         return redirect("/login")
     else:
-        return render_template("index.html")
+        # Connecting to DB 
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
+        # Getting data from tasks table, for current user (as creator and executor)
+        db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?", (session["user_id"], session["user_id"],))
+        rows = db.fetchall()
+        # Passing all values to jinja
+        return render_template("index.html", rows=rows)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -87,6 +95,26 @@ def logout():
 def new_task():
     if request.method == "GET":
         return render_template("new_task.html")
+    else:
+        # Connecting to DB 
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
+        # Getting values from user
+        executor = request.form.get("task_for")
+        heading = request.form.get("heading")
+        description = request.form.get("description")
+        deadline = request.form.get("deadline")
+        status = 0
+
+        # Storing user task into db table
+        db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, deadline_date, status) VALUES (?, ?, ?, ?, ?, ?)",
+        (session["user_id"], executor, heading, description, deadline, status))
+        connection.commit()
+        connection.close()
+
+        # Redirecting to index, where all tasks will be shown (recent created ones first)
+        return redirect("/")
 
 
 @app.route("/tasks", methods=["GET"])
