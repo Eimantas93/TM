@@ -128,7 +128,11 @@ def relations():
         db.execute("SELECT * FROM relations")
         relations = db.fetchall()
 
-        return render_template("relations.html", rows=rows, relations=relations)
+        db.execute(
+            "SELECT users.user_id, users.name, users.position, users.company, relations.supervisors_id, relations.subordinates_id FROM users INNER JOIN relations ON users.user_id = relations.user_id")
+        joined_rows = db.fetchall()
+
+        return render_template("relations.html", rows=rows, relations=relations, joined_rows=joined_rows)
     else:
         selected_supervisors_id = request.form.get("new_supervisor")
         selected_subordinates_id = request.form.get("new_subordinate")

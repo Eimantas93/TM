@@ -14,15 +14,19 @@ Task Manager
                 <h3>Assign subordinate for supervisor</h3>
                 <label>Supervisor</label>
                 <select name="new_supervisor">
+                    {% if rows is not none %}
                     {% for row in rows %}
                     <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
                     {% endfor %}
+                    {% endif %}
                 </select>
                 <label>Subordinate</label>
                 <select name="new_subordinate">
+                    {% if rows is not none %}
                     {% for row in rows %}
                     <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
                     {% endfor %}
+                    {% endif %}
                 </select>
                 <button type="submit">ASSIGN</button>
             </form>
@@ -35,23 +39,40 @@ Task Manager
                 <td>Supervisor</td>
                 <td>Subordinates</td>
             </tr>
-            {% for row in rows %}
+            {% if joined_rows is not none %}
+            {% for row2 in rows %}
             <tr class="border">
                 <td class="border">
-
-                    {{ row[1] }}
+                    {{ row2[1] }}
                 </td>
                 <td class="border">
-                    {{ row[3] }}
+                    {{ row2[3] }}
                 </td>
                 <td class="border">
-                    Supervisor
+                    {% for joined_row in joined_rows %}
+                    {% if row2[0] == joined_row[0] %}
+                    {% for row3 in rows %}
+                    {% if joined_row[4] == row3[0] %}
+                    {{ row3[1] }}
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    {% endfor %}
                 </td>
                 <td class="border">
-                    Subordinates
+                    {% for joined_row in joined_rows %}
+                    {% if row2[0] == joined_row[0] %}
+                    {% for row3 in rows %}
+                    {% if joined_row[5] == row3[0] %}
+                    {{ row3[1] }}
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    {% endfor %}
                 </td>
             </tr>
             {% endfor %}
+            {% endif %}
         </table>
     </center>
 </div>
