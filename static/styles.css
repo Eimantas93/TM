@@ -9,6 +9,7 @@ footer {
 .pageTitle {
     padding: 20px;
     text-align: center;
+    margin-left: 5px;
 }
 
 label {
@@ -36,17 +37,27 @@ label {
     width: 60%;
 }
 
-.container-2 {
-    display: inline-table;
-    flex-direction: column;
+.table {
+    width: 60%;
+    margin-left: 5px;
+    margin-bottom: 30px;
 }
 
-.table-1 {
-    display: flex;
-}
-
-.borderTitle {
-    display: flex;
-    width: 50%;
+.borderValue {
     border: 1px solid black;
+}
+
+.tableRow {
+    border: 1px solid black;
+    width: 60%;
+}
+
+.borderName {
+    width: 15%;
+}
+
+.edit {
+    margin-left: 10px;
+    font-weight: bold;
+    color: green;
 }

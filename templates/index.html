@@ -10,38 +10,42 @@ Task Manager
     <h2>Ongoing tasks:</h2>
     {% for row in rows %}
     <div class="container-2">
-        <tr class="table-1">
-            <td class="borderTitle">Task ID</td>
+    <a href="edit.html" class="edit" name="edit" value="{{ row[0] }}"> &#9997;	Edit Task</a>
+    <table class="table">
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Task ID</th>
             <td class="borderValue">{{ row[0] }}</td>
         </tr>
-        <tr class="table-1">
-            <td class="borderTitle">Creator ID</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Creator ID</th>
             <td class="borderValue">{{ row[1] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Executor ID</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Executor ID</th>
             <td class="borderValue">{{ row[2] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Heading</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Heading</th>
             <td class="borderValue">{{ row[3] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Description</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Description</th>
             <td class="borderValue">{{ row[4] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Creation Date</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Creation Date</th>
             <td class="borderValue">{{ row[5] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Deadline</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Deadline</th>
             <td class="borderValue">{{ row[6] }}</td>
         </tr>
-        <tr>
-            <td class="borderTitle">Status</td>
+        <tr class="tableRow">
+            <th scope="col" class="borderName">Status</th>
             <td class="borderValue">{{ row[7] }}</td>
         </tr>
+    </table>
+    <hr>
     </div>
     {% endfor %}
     <!-- <form action="/edit_task" method="GET">

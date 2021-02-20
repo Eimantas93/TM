@@ -81,7 +81,7 @@ def login():
         # Setting session user ID
         session["user_id"] = row[0]
 
-        return render_template("index.html")
+        return redirect("/")
 
 
 @app.route("/logout")
