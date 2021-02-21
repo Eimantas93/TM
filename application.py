@@ -10,21 +10,24 @@ app.config['SECRET_KEY'] = 'sessions'
 app.permanent_session_lifetime = timedelta(days=1)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    if session.get("user_id") is None:
-        return redirect("/login")
+    if request.method == "GET":
+        if session.get("user_id") is None:
+            return redirect("/login")
+        else:
+            # Connecting to DB 
+            connection = sqlite3.connect('data.db')
+            db = connection.cursor()
+
+            # Getting data from tasks table, for current user (as creator and executor)
+            db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?", (session["user_id"], session["user_id"],))
+            rows = db.fetchall()
+            # Passing all values to jinja
+            return render_template("index.html", rows=rows)
     else:
-        # Connecting to DB 
-        connection = sqlite3.connect('data.db')
-        db = connection.cursor()
-
-        # Getting data from tasks table, for current user (as creator and executor)
-        db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?", (session["user_id"], session["user_id"],))
-        rows = db.fetchall()
-        # Passing all values to jinja
-        return render_template("index.html", rows=rows)
-
+        taskID = request.form.get("taskID")
+        return render_template("edit_task.html", taskID=taskID) # NEED TO FIX THIS 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
