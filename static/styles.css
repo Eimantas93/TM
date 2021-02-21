@@ -43,21 +43,25 @@ label {
     margin-bottom: 30px;
 }
 
-.borderValue {
+/* Two "r' because class "border" is already taken by bootstrap */
+.borderr {
     border: 1px solid black;
-}
-
-.tableRow {
-    border: 1px solid black;
-    width: 60%;
 }
 
 .borderName {
-    width: 15%;
+    width: 16%;
 }
-
 .edit {
     margin-left: 10px;
     font-weight: bold;
     color: green;
+}
+
+/* A little better look */
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.form-2 {
+    width: 100%;
 }

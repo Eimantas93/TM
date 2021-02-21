@@ -46,13 +46,10 @@
             <a class="nav-link" href='{{ url_for("index") }}'>Main</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href='{{ url_for("tasks") }}'>Assigned tasks</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href='{{ url_for("relations") }}'>Edit relations</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href='#'>Tasks history</a>
+            <a class="nav-link" href='{{ url_for("tasks") }}'>Tasks history</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href='{{ url_for("new_task") }}'>New task</a>

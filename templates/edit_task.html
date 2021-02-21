@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Edit task
+{% endblock %}
+
+{% block main %}
+<h1 class="pageTitle">Edit task</h1>
+<hr>
+<center>
+    <form action="/edit_task" method="POST" class="form-2">
+    <table class="table">
+        <tr class="borderr">
+            <th scope="col" class="borderName">Task ID</th>
+            <td class="borderr" style="background-color: lightgrey;">xxxx</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Creator ID</th>
+            <td class="borderr" style="background-color: lightgrey;">xxx</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Executor ID</th>
+            <td class="borderr" style="background-color: lightgrey;">xxx</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName" name="heading">Heading</th>
+            <td class="borderr"><div contenteditable>I'm editable</div></td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName" name="description">Description</th>
+            <td class="borderr"><div contenteditable>I'm editable</div></td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName" name="creation_date">Creation Date</th>
+            <td class="borderr" style="background-color: lightgrey;">xxxx</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName" name="deadline">Deadline</th>
+            <td class="borderr">xxxx</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName" name="status">Status</th>
+            <td class="borderr">xxxx</td>
+        </tr>
+    </table>
+    <div class="button">
+    <button type="submit" class="btn btn-primary">Submit changes</button>
+    </div>  
+    </form>
+</center>
+{% endblock %}
+<table>
+    <tr><td><div contenteditable>I'm editable</div></td>
+    <td><div contenteditable>I'm also editable</div></td></tr>
+    <tr><td>I'm not editable</td></tr>
+</table>
