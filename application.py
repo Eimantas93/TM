@@ -15,12 +15,13 @@ def index():
     if session.get("user_id") is None:
         return redirect("/login")
     else:
-        # Connecting to DB 
+        # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
         # Getting data from tasks table, for current user (as creator and executor)
-        db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?", (session["user_id"], session["user_id"],))
+        db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?",
+                   (session["user_id"], session["user_id"],))
         rows = db.fetchall()
         # Passing all values to jinja
         return render_template("index.html", rows=rows)
@@ -96,7 +97,7 @@ def new_task():
     if request.method == "GET":
         return render_template("new_task.html")
     else:
-        # Connecting to DB 
+        # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
@@ -109,7 +110,7 @@ def new_task():
 
         # Storing user task into db table
         db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, deadline_date, status) VALUES (?, ?, ?, ?, ?, ?)",
-        (session["user_id"], executor, heading, description, deadline, status))
+                   (session["user_id"], executor, heading, description, deadline, status))
         connection.commit()
         connection.close()
 
@@ -128,12 +129,19 @@ def edit_task():
         return render_template("edit_task.html")
 
 
-def assign():
-    return "ok"
-
-
+@app.route("/unassign", methods=["GET"])
 def unassign():
-    return "ok"
+    selected_supervisors_id = request.form.get("new_supervisor")
+    selected_subordinates_id = request.form.get("new_subordinate")
+
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    connection.execute(
+        "DELETE FROM relations WHERE supervisors_id = ? AND subordinates_id = ?", (selected_supervisors_id, selected_subordinates_id))
+
+    return redirect(url_for("relations"))
 
 
 @app.route("/relations", methods=["GET", "POST"])
