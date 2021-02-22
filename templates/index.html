@@ -7,22 +7,35 @@ Task Manager
 {% block main %}
 <h1 class="pageTitle">Welcome to Task Manager App!</h1>
 <hr>
-<h2>Ongoing tasks:</h2>
+<h2 style="margin-left: 5px;">Ongoing tasks:</h2>
 {% for row in rows %}
 <div class="container-2">
     <form action="/" method="POST">
+        <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; Edit task</button>
         <table class="table">
             <tr class="borderr">
-                <th scope="col" class="borderName">Task ID</th>
-                <td class="borderr">{{ row[0] }}</td>
+                <th scope="col" class="borderName">Creation date</th>
+                <td class="borderr">{{ row[5] }}</td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName">Creator ID</th>
-                <td class="borderr">{{ row[1] }}</td>
+                <th scope="col" class="borderName">Creator name</th>
+                <td class="borderr">
+                    {% for user in users %}
+                    {% if user[0] == row[1] %}
+                    {{ user[1] }}
+                    {% endif %}
+                    {% endfor %}
+                </td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName">Executor ID</th>
-                <td class="borderr">{{ row[2] }}</td>
+                <th scope="col" class="borderName">Executor name</th>
+                <td class="borderr">
+                    {% for user in users %}
+                    {% if user[0] == row[2] %}
+                    {{ user[1] }}
+                    {% endif %}
+                    {% endfor %}
+                </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName">Heading</th>
@@ -31,10 +44,6 @@ Task Manager
             <tr class="borderr">
                 <th scope="col" class="borderName">Description</th>
                 <td class="borderr">{{ row[4] }}</td>
-            </tr>
-            <tr class="borderr">
-                <th scope="col" class="borderName">Creation Date</th>
-                <td class="borderr">{{ row[5] }}</td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName">Deadline</th>
@@ -46,7 +55,6 @@ Task Manager
             </tr>
         </table>
         <hr>
-        <button type="submit" name="task_id" value="{{ row[0] }}">Edit task</button>
     </form>
 </div>
 {% endfor %}

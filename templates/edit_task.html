@@ -11,36 +11,69 @@ Edit task
     <form action="/edit_task" method="POST" class="form-2">
         <table class="table">
             <tr class="borderr">
-                <th scope="col" class="borderName">Creator username</th>
-                <td class="borderr" style="background-color: lightgrey;">{{ creator_id }}</td>
+                <th scope="col" class="borderName">Creator name</th>
+                <td class="borderr">{{ creator_name }}</td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName">Executor username</th>
-                <td class="borderr" style="background-color: lightgrey;">{{ executor_id }}</td>
+                <th scope="col" class="borderName">Executor name</th>
+                <td class="borderr">{{ executor_name }}</td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName" name="heading">Heading</th>
+                <th scope="col" class="borderName">Heading</th>
                 <td class="borderr">
-                    <div contenteditable>{{ heading }}</div>
+                    {% if session["user_id"] == creator_id %}
+                    <input autocomplete="off" type="text" class="form-control" name="heading" value= "{{ heading }}" required>
+                    {% else %}
+                    <input autocomplete="off" type="text" class="form-control" name="heading" value= "{{ heading }}" disabled>
+                    {% endif %}
                 </td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName" name="description">Description</th>
+                <th scope="col" class="borderName">Description</th>
                 <td class="borderr">
-                    <div contenteditable>{{ description }}</div>
+                {% if session["user_id"] == creator_id %}
+                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
+                required> {{ description }}</textarea>
+                {% else %}
+                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
+                disabled> {{ description }}</textarea>
+                {% endif %}
                 </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="creation_date">Creation Date</th>
-                <td class="borderr" style="background-color: lightgrey;">{{ creation_date }}</td>
+                <td class="borderr">{{ creation_date }}</td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName" name="deadline">Deadline</th>
-                <td class="borderr">{{ deadline }}</td>
+                <th scope="col" class="borderName">Deadline</th>
+                <td class="borderr">
+                    {% if session["user_id"] == creator_id %}
+                    <input type="date" min="{{ deadline }}" value="{{ deadline }}" name="deadline" required>
+                    {% else %}
+                    <input type="date" min="{{ deadline }}" value="{{ deadline }}" name="deadline" disabled>
+                    {% endif %}
+                </td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName" name="status">Status</th>
-                <td class="borderr">xxxx</td>
+                <th scope="col" class="borderName">Status</th>
+                <td class="borderr" name="status" value="{{ status }}">
+                    {% if status == 0 %}
+                    In progress
+                    {% elif status == 1 %}
+                    Finished
+                    {% else %}
+                    Canceled
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Change status</th>
+                <td class="borderr">
+                <select name="status">
+                    <option value="1">Finish</option>
+                    <option value="2">Cancel</option>
+                </select>
+                </td>
             </tr>
         </table>
         <button type="submit" class="btn btn-primary">Submit changes</button>

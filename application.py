@@ -21,11 +21,14 @@ def index():
             db = connection.cursor()
 
             # Getting data from tasks table, for current user (as creator and executor)
-            db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?",
-                       (session["user_id"], session["user_id"],))
+            db.execute("SELECT * FROM tasks WHERE creator_id = ? OR executor_id = ? AND status = 0 ORDER BY creation_date DESC",
+               (session["user_id"], session["user_id"]))
             rows = db.fetchall()
+
+            db.execute("SELECT * FROM users")
+            users = db.fetchall()
             # Passing all values to jinja
-            return render_template("index.html", rows=rows)
+            return render_template("index.html", rows=rows, users=users)
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
@@ -48,13 +51,16 @@ def index():
         status = row[7]
 
         db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id))
-        creator_id = db.fetchone()
+        creatorList = db.fetchone()
+        creator_name = creatorList[0]
 
         db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id))
-        executor_id = db.fetchone()
+        executorList = db.fetchone()
+        executor_name = executorList[0]
 
         # NEED TO FIX THIS
-        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status)
+        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
+        , creator_name=creator_name, executor_name=executor_name)
 
 
 @app.route("/register", methods=["GET", "POST"])
