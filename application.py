@@ -129,17 +129,23 @@ def edit_task():
         return render_template("edit_task.html")
 
 
-@app.route("/unassign", methods=["GET"])
+@app.route("/unassign", methods=["POST"])
 def unassign():
-    selected_supervisors_id = request.form.get("new_supervisor")
-    selected_subordinates_id = request.form.get("new_subordinate")
+    supervisors_id = request.form.get("selected_supervisors_id")
+    subordinates_id = request.form.get("selected_subordinates_id")
 
     # Connecting to DB
     connection = sqlite3.connect('data.db')
     db = connection.cursor()
 
-    connection.execute(
-        "DELETE FROM relations WHERE supervisors_id = ? AND subordinates_id = ?", (selected_supervisors_id, selected_subordinates_id))
+    connection.execute("DELETE FROM relations WHERE user_id = ? AND subordinates_id = ?",
+                       (supervisors_id, subordinates_id))
+
+    connection.execute("DELETE FROM relations WHERE user_id = ? AND supervisors_id = ?",
+                       (subordinates_id, supervisors_id))
+
+    connection.commit()
+    connection.close()
 
     return redirect(url_for("relations"))
 
