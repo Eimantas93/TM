@@ -9,49 +9,53 @@ Edit task
 <hr>
 <center>
     <form action="/edit_task" method="POST" class="form-2">
-    <table class="table">
-        <tr class="borderr">
-            <th scope="col" class="borderName">Task ID</th>
-            <td class="borderr" style="background-color: lightgrey;">xxxx</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Creator ID</th>
-            <td class="borderr" style="background-color: lightgrey;">xxx</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Executor ID</th>
-            <td class="borderr" style="background-color: lightgrey;">xxx</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName" name="heading">Heading</th>
-            <td class="borderr"><div contenteditable>I'm editable</div></td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName" name="description">Description</th>
-            <td class="borderr"><div contenteditable>I'm editable</div></td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName" name="creation_date">Creation Date</th>
-            <td class="borderr" style="background-color: lightgrey;">xxxx</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName" name="deadline">Deadline</th>
-            <td class="borderr">xxxx</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName" name="status">Status</th>
-            <td class="borderr">xxxx</td>
-        </tr>
-    </table>
-    <button type="submit" class="btn btn-primary">Submit changes</button> 
-    <hr>
-    <h2 class="pageTitle">Notes list:</h2>
-    <!-- Go through Notes.db list with loop -->
-<label>Add new note:</label>
-<div class="table">
-    <textarea placeholder="Type here..." type="text" name="note" style="width: 100%;"></textarea>
-</div>
-<button type="submit" class="btn btn-primary" style="margin-bottom: 30px;">Add note</button>
-</form>
+        <table class="table">
+            <tr class="borderr">
+                <th scope="col" class="borderName">Task ID</th>
+                <td class="borderr" style="background-color: lightgrey;">{{ task_id }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Creator ID</th>
+                <td class="borderr" style="background-color: lightgrey;">{{ creator_id }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Executor ID</th>
+                <td class="borderr" style="background-color: lightgrey;">xxx</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName" name="heading">Heading</th>
+                <td class="borderr">
+                    <div contenteditable>I'm editable</div>
+                </td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName" name="description">Description</th>
+                <td class="borderr">
+                    <div contenteditable>I'm editable</div>
+                </td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName" name="creation_date">Creation Date</th>
+                <td class="borderr" style="background-color: lightgrey;">xxxx</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName" name="deadline">Deadline</th>
+                <td class="borderr">xxxx</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName" name="status">Status</th>
+                <td class="borderr">xxxx</td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary">Submit changes</button>
+        <hr>
+        <h2 class="pageTitle">Notes list:</h2>
+        <!-- Go through Notes.db list with loop -->
+        <label>Add new note:</label>
+        <div class="table">
+            <textarea placeholder="Type here..." type="text" name="note" style="width: 100%;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 30px;">Add note</button>
+    </form>
 </center>
 {% endblock %}

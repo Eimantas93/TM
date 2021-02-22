@@ -5,47 +5,49 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-    <h1 class="pageTitle">Welcome to Task Manager App!</h1>
-    <hr>
-    <h2>Ongoing tasks:</h2>
-    {% for row in rows %}
-    <div class="container-2">
-    <a href='{{ url_for("edit_task") }}' class="edit" name="edit" value="{{ row[0] }}"> &#9997;	Edit Task</a>
-    <table class="table">
-        <tr class="borderr">
-            <th scope="col" class="borderName">Task ID</th>
-            <td class="borderr">{{ row[0] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Creator ID</th>
-            <td class="borderr">{{ row[1] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Executor ID</th>
-            <td class="borderr">{{ row[2] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Heading</th>
-            <td class="borderr">{{ row[3] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Description</th>
-            <td class="borderr">{{ row[4] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Creation Date</th>
-            <td class="borderr">{{ row[5] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Deadline</th>
-            <td class="borderr">{{ row[6] }}</td>
-        </tr>
-        <tr class="borderr">
-            <th scope="col" class="borderName">Status</th>
-            <td class="borderr">{{ row[7] }}</td>
-        </tr>
-    </table>
-    <hr>
-    </div>
-    {% endfor %}
+<h1 class="pageTitle">Welcome to Task Manager App!</h1>
+<hr>
+<h2>Ongoing tasks:</h2>
+{% for row in rows %}
+<div class="container-2">
+    <form action="/" method="POST">
+        <table class="table">
+            <tr class="borderr">
+                <th scope="col" class="borderName">Task ID</th>
+                <td class="borderr">{{ row[0] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Creator ID</th>
+                <td class="borderr">{{ row[1] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Executor ID</th>
+                <td class="borderr">{{ row[2] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Heading</th>
+                <td class="borderr">{{ row[3] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Description</th>
+                <td class="borderr">{{ row[4] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Creation Date</th>
+                <td class="borderr">{{ row[5] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Deadline</th>
+                <td class="borderr">{{ row[6] }}</td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Status</th>
+                <td class="borderr">{{ row[7] }}</td>
+            </tr>
+        </table>
+        <hr>
+        <button type="submit" name="task_id" value="{{ row[0] }}">Edit task</button>
+    </form>
+</div>
+{% endfor %}
 {% endblock %}

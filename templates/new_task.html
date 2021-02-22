@@ -14,6 +14,7 @@ Create new task
             <select id="task_for" name="task_for">
                 <option value="{{ user_id }}">Me</option>
 
+                // Checking for subordinates
                 {% for row in rows %}
                 {% for relation in relations %}
                 {% if row[0] == relation[1] and user_id == relation[2] %}

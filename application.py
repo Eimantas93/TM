@@ -27,9 +27,17 @@ def index():
             # Passing all values to jinja
             return render_template("index.html", rows=rows)
     else:
-        taskID = request.form.get("taskID")
+        task_id = request.form.get("task_id")
+        creator_id = request.form.get("creator_id")
+        executor_id = request.form.get("executor_id")
+        heading = request.form.get("heading")
+        description = request.form.get("description")
+        creation_date = request.form.get("creation_date")
+        deadline = request.form.get("deadline")
+        status = request.form.get("status")
+
         # NEED TO FIX THIS
-        return render_template("edit_task.html", taskID=taskID)
+        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -150,6 +158,7 @@ def tasks():
 @app.route("/edit_task", methods=["GET", "POST"])
 def edit_task():
     if request.method == "GET":
+
         return render_template("edit_task.html")
 
 
