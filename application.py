@@ -27,14 +27,31 @@ def index():
             # Passing all values to jinja
             return render_template("index.html", rows=rows)
     else:
+        # Connecting to DB
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
         task_id = request.form.get("task_id")
-        creator_id = request.form.get("creator_id")
-        executor_id = request.form.get("executor_id")
-        heading = request.form.get("heading")
-        description = request.form.get("description")
-        creation_date = request.form.get("creation_date")
-        deadline = request.form.get("deadline")
-        status = request.form.get("status")
+
+        # Get current task data
+        db.execute(
+            "SELECT * FROM tasks WHERE id = ?", (task_id))
+
+        row = db.fetchone()
+
+        creator_id = str(row[1])
+        executor_id = str(row[2])
+        heading = row[3]
+        description = row[4]
+        creation_date = row[5]
+        deadline = row[6]
+        status = row[7]
+
+        db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id))
+        creator_id = db.fetchone()
+
+        db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id))
+        executor_id = db.fetchone()
 
         # NEED TO FIX THIS
         return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status)

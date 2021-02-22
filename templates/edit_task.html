@@ -11,36 +11,32 @@ Edit task
     <form action="/edit_task" method="POST" class="form-2">
         <table class="table">
             <tr class="borderr">
-                <th scope="col" class="borderName">Task ID</th>
-                <td class="borderr" style="background-color: lightgrey;">{{ task_id }}</td>
-            </tr>
-            <tr class="borderr">
-                <th scope="col" class="borderName">Creator ID</th>
+                <th scope="col" class="borderName">Creator username</th>
                 <td class="borderr" style="background-color: lightgrey;">{{ creator_id }}</td>
             </tr>
             <tr class="borderr">
-                <th scope="col" class="borderName">Executor ID</th>
-                <td class="borderr" style="background-color: lightgrey;">xxx</td>
+                <th scope="col" class="borderName">Executor username</th>
+                <td class="borderr" style="background-color: lightgrey;">{{ executor_id }}</td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="heading">Heading</th>
                 <td class="borderr">
-                    <div contenteditable>I'm editable</div>
+                    <div contenteditable>{{ heading }}</div>
                 </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="description">Description</th>
                 <td class="borderr">
-                    <div contenteditable>I'm editable</div>
+                    <div contenteditable>{{ description }}</div>
                 </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="creation_date">Creation Date</th>
-                <td class="borderr" style="background-color: lightgrey;">xxxx</td>
+                <td class="borderr" style="background-color: lightgrey;">{{ creation_date }}</td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="deadline">Deadline</th>
-                <td class="borderr">xxxx</td>
+                <td class="borderr">{{ deadline }}</td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName" name="status">Status</th>
