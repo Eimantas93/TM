@@ -8,18 +8,50 @@ All tasks
 <h1 class="pageTitle">Tasks History.</h1>
 
 {% for row in rows %}
-<center>
-    Creation date: {{ row[5] }}
-    Creator: {{ row[1] }}
-    Executor: {{ row[2] }}
-    Heading: {{ row[3] }}
-    Description: {{ row[4] }}
-    Deadline: {{ row[6] }}
-</center>
-<br>
 
-
+<div class="container-2">
+    <table class="table">
+        <tr class="borderr">
+            <th scope="col" class="borderName">Creation date:</th>
+            <td class="borderr">{{ row[5] }}</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Creator name:</th>
+            <td class="borderr">
+                {% for user in users %}
+                {% if user[0] == row[1] %}
+                {{ user[1] }}
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Executor name</th>
+            <td class="borderr">
+                {% for user in users %}
+                {% if user[0] == row[2] %}
+                {{ user[1] }}
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Heading</th>
+            <td class="borderr">{{ row[3] }}</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Description</th>
+            <td class="borderr">{{ row[4] }}</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Deadline</th>
+            <td class="borderr">{{ row[6] }}</td>
+        </tr>
+        <tr class="borderr">
+            <th scope="col" class="borderName">Status</th>
+            <td class="borderr">{{ row[7] }}</td>
+        </tr>
+    </table>
+</div>
 {% endfor %}
-<hr>
-<!-- Need to loop over existing tasks with jinja -->
 {% endblock %}

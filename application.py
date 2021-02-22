@@ -178,7 +178,10 @@ def tasks():
                (session["user_id"], session["user_id"]))
     rows = db.fetchall()
 
-    return render_template("tasks.html", rows=rows)
+    db.execute("SELECT * FROM users")
+    users = db.fetchall()
+
+    return render_template("tasks.html", rows=rows, users=users)
 
 
 @app.route("/edit_task", methods=["GET", "POST"])
