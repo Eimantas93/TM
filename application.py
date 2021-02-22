@@ -16,32 +16,21 @@ def index():
         if session.get("user_id") is None:
             return redirect("/login")
         else:
-            # Connecting to DB 
+            # Connecting to DB
             connection = sqlite3.connect('data.db')
             db = connection.cursor()
 
             # Getting data from tasks table, for current user (as creator and executor)
-            db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?", (session["user_id"], session["user_id"],))
+            db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?",
+                       (session["user_id"], session["user_id"],))
             rows = db.fetchall()
             # Passing all values to jinja
             return render_template("index.html", rows=rows)
     else:
-<<<<<<< HEAD
-        # Connecting to DB
-        connection = sqlite3.connect('data.db')
-        db = connection.cursor()
-
-        # Getting data from tasks table, for current user (as creator and executor)
-        db.execute("SELECT * FROM tasks WHERE executor_id = ? OR creator_id = ?",
-                   (session["user_id"], session["user_id"],))
-        rows = db.fetchall()
-        # Passing all values to jinja
-        return render_template("index.html", rows=rows)
-
-=======
         taskID = request.form.get("taskID")
-        return render_template("edit_task.html", taskID=taskID) # NEED TO FIX THIS 
->>>>>>> d29d745c4f78fc490159619134c2e4d5f947ca25
+        # NEED TO FIX THIS
+        return render_template("edit_task.html", taskID=taskID)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -111,7 +100,26 @@ def logout():
 @app.route("/new_task", methods=["GET", "POST"])
 def new_task():
     if request.method == "GET":
-        return render_template("new_task.html")
+
+        # Connecting to DB
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+        user_id = session["user_id"]
+
+        # Get current user session id
+        db.execute(
+            "SELECT * FROM users WHERE user_id = ?", (user_id,))
+        user_row = db.fetchone()
+
+        # Get current user company data
+        db.execute("SELECT * FROM users WHERE company = ?", (user_row[4],))
+        rows = db.fetchall()
+
+        # Get all relations data
+        db.execute("SELECT * FROM relations")
+        relations = db.fetchall()
+
+        return render_template("new_task.html", relations=relations, rows=rows, user_id=user_id)
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
@@ -178,11 +186,11 @@ def relations():
             "SELECT * FROM users WHERE user_id = ?", (session["user_id"],))
         user_row = db.fetchone()
 
-        # Get current user company
+        # Get current user company data
         db.execute("SELECT * FROM users WHERE company = ?", (user_row[4],))
         rows = db.fetchall()
 
-        # Get current user company
+        # Get all relations data
         db.execute("SELECT * FROM relations")
         relations = db.fetchall()
 

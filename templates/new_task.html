@@ -5,17 +5,22 @@ Create new task
 {% endblock %}
 
 {% block main %}
-    <h1 class="pageTitle">Create new task!</h1>
-    <hr>
-    <div class="container-1">
+<h1 class="pageTitle">Create new task!</h1>
+<hr>
+<div class="container-1">
     <form action="/new_task" method="post" class="form">
         <label>Task for: </label>
         <div class="form-group">
             <select id="task_for" name="task_for">
-                <option value="1">Me</option>
-                <option value="2">Manager</option>
-                <option value="3">Assistant</option>
-                <option value="4">Designer</option>
+                <option value="{{ user_id }}">Me</option>
+
+                {% for row in rows %}
+                {% for relation in relations %}
+                {% if row[0] == relation[1] and user_id == relation[2] %}
+                <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
             </select>
         </div>
         <label>Task name: </label>
@@ -26,16 +31,16 @@ Create new task
         <label>Task description: </label>
         <div class="form-group">
             <!-- Textarea to make the comment section adjustable to input size -->
-        <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text" name="description"
-        style="height: 200px;" required></textarea>
+            <textarea placeholder="Italian pizza to Kaunas, laisves aleja 25" class="form-control" type="text"
+                name="description" style="height: 200px;" required></textarea>
         </div>
         <label>Deadline: </label>
         <div class="form-group">
             <input type="date" min="2021-02-22" value="2021-02-22" name="deadline" required>
         </div>
         <div class="button">
-        <button class="btn btn-primary" type="submit">DELIVER</button>
+            <button class="btn btn-primary" type="submit">DELIVER</button>
         </div>
     </form>
-    </div>
+</div>
 {% endblock %}
