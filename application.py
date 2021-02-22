@@ -169,7 +169,16 @@ def new_task():
 
 @app.route("/tasks", methods=["GET"])
 def tasks():
-    return render_template("tasks.html")
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    # Get current user tasks history
+    db.execute("SELECT * FROM tasks WHERE creator_id = ? OR executor_id = ? ORDER BY creation_date DESC",
+               (session["user_id"], session["user_id"]))
+    rows = db.fetchall()
+
+    return render_template("tasks.html", rows=rows)
 
 
 @app.route("/edit_task", methods=["GET", "POST"])

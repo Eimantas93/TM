@@ -6,6 +6,20 @@ All tasks
 
 {% block main %}
 <h1 class="pageTitle">Tasks History.</h1>
+
+{% for row in rows %}
+<center>
+    Creation date: {{ row[5] }}
+    Creator: {{ row[1] }}
+    Executor: {{ row[2] }}
+    Heading: {{ row[3] }}
+    Description: {{ row[4] }}
+    Deadline: {{ row[6] }}
+</center>
+<br>
+
+
+{% endfor %}
 <hr>
 <!-- Need to loop over existing tasks with jinja -->
 {% endblock %}
