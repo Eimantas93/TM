@@ -5,6 +5,7 @@ Edit task
 {% endblock %}
 
 {% block main %}
+
 <h1 class="pageTitle">Edit task</h1>
 <hr>
 <center>
@@ -31,8 +32,8 @@ Edit task
             <tr class="borderr">
                 <th scope="col" class="borderName">Description</th>
                 <td class="borderr">
-                {% if session["user_id"] == creator_id %}
-                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
+                {% if creator_id == session["user_id"] %}
+                <textarea class="form-control" type="text" name="description" style="white-space: pre-wrap; height: 200px;" 
                 required> {{ description }}</textarea>
                 {% else %}
                 <textarea class="form-control" type="text" name="description" style="height: 200px;" 
@@ -48,15 +49,15 @@ Edit task
                 <th scope="col" class="borderName">Deadline</th>
                 <td class="borderr">
                     {% if session["user_id"] == creator_id %}
-                    <input type="date" min="{{ deadline }}" value="{{ deadline }}" name="deadline" required>
+                    <input type="date" value="{{ deadline }}" name="deadline" required>
                     {% else %}
-                    <input type="date" min="{{ deadline }}" value="{{ deadline }}" name="deadline" disabled>
+                    <input type="date" value="{{ deadline }}" name="deadline" disabled>
                     {% endif %}
                 </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName">Status</th>
-                <td class="borderr" name="status" value="{{ status }}">
+                <td class="borderr" value="{{ status }}">
                     {% if status == 0 %}
                     In progress
                     {% elif status == 1 %}
@@ -66,26 +67,49 @@ Edit task
                     {% endif %}
                 </td>
             </tr>
+            {% if status == 0 %}
             <tr class="borderr">
                 <th scope="col" class="borderName">Change status</th>
                 <td class="borderr">
                 <select name="status">
+                    <option value="0">In Progress</option>
                     <option value="1">Finish</option>
                     <option value="2">Cancel</option>
                 </select>
                 </td>
             </tr>
+            {% endif %}
         </table>
-        <button type="submit" class="btn btn-primary">Submit changes</button>
+        {% if status == 0 %}
+        <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}">Submit changes</button>
+        {% else %}
+        <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}" disabled>Submit changes</button>
+        <br>
+        <label style="color: red; font-size: small;">*Canceled or Finished tasks can't be edited.</label>
+        {% endif %}
+    </form>
         <hr>
         <h2 class="pageTitle">Notes list:</h2>
-        <!-- Go through Notes.db list with loop -->
+        {% for note in notes %}
+        <div class="notes-1">
+            <div class="notes-2">
+        <b>{{ note[1] }}:</b> 
+            </div>
+            <div class="notes-4">
+                <p type="text" style="white-space: pre-wrap; word-wrap: break-word;"> {{ note[0] }}</p>
+            </div>
+            <div class="notes-3">
+            {{ note[2] }}
+            </div>
+        </div>
+        {% endfor %}
         <hr>
         <label>Add new note:</label>
+        <form action="/add_note" method="POST" class="form-2">
         <div class="table">
             <textarea placeholder="Type here..." type="text" name="note" style="width: 100%; height: 150px;"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="margin-bottom: 30px;">Add note</button>
-    </form>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 40px;" name="task_id" value="{{ task_id }}">Add note</button>
+        </form>
 </center>
 {% endblock %}

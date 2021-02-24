@@ -10,6 +10,9 @@ All tasks
 {% for row in rows %}
 
 <div class="container-2">
+    <form action="/" method="POST">
+        <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
+    </form>
     <table class="table">
         <tr class="borderr">
             <th scope="col" class="borderName">Creation date:</th>
@@ -41,7 +44,7 @@ All tasks
         </tr>
         <tr class="borderr">
             <th scope="col" class="borderName">Description</th>
-            <td class="borderr">{{ row[4] }}</td>
+            <td class="borderr" style="white-space: pre-wrap;">{{ row[4] }}</td>
         </tr>
         <tr class="borderr">
             <th scope="col" class="borderName">Deadline</th>
@@ -49,7 +52,15 @@ All tasks
         </tr>
         <tr class="borderr">
             <th scope="col" class="borderName">Status</th>
-            <td class="borderr">{{ row[7] }}</td>
+            <td class="borderr">
+                {% if row[7] == 0 %}
+                In progress
+                {% elif row[7] == 1 %}
+                Finished
+                {% else %}
+                Canceled
+                {% endif %}
+            </td>
         </tr>
     </table>
 </div>

@@ -65,3 +65,23 @@ body {
 .form-2 {
     width: 100%;
 }
+
+.notes-1 {
+    display: flex;
+    border: 1px solid black;
+    width: 60%;
+    word-wrap: break-word;
+    flex-wrap: nowrap;
+}
+.notes-2 {
+    background-color: #F8F8F8;
+    width: 16%;
+}
+.notes-3 {
+    margin-left: auto;
+}
+
+.notes-4 {
+    width: fit-content;
+    word-wrap: break-word;
+}

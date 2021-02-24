@@ -42,25 +42,28 @@ def index():
 
         row = db.fetchone()
 
-        creator_id = str(row[1])
-        executor_id = str(row[2])
+        creator_id = row[1]
+        executor_id = row[2]
         heading = row[3]
         description = row[4]
         creation_date = row[5]
         deadline = row[6]
         status = row[7]
 
-        db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id))
+        db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
         creatorList = db.fetchone()
         creator_name = creatorList[0]
 
-        db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id))
+        db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id,))
         executorList = db.fetchone()
         executor_name = executorList[0]
 
+        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+        notes = db.fetchall()
+
         # NEED TO FIX THIS
         return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-        , creator_name=creator_name, executor_name=executor_name)
+        , creator_name=creator_name, executor_name=executor_name, notes=notes)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -190,11 +193,46 @@ def tasks():
     return render_template("tasks.html", rows=rows, users=users)
 
 
-@app.route("/edit_task", methods=["GET", "POST"])
+@app.route("/edit_task", methods=["POST"])
 def edit_task():
-    if request.method == "GET":
+    if request.method == "POST":
+        heading = request.form.get("heading")
+        description = request.form.get("description")
+        deadline = request.form.get("deadline")
+        status = request.form.get("status")
+        task_id = request.form.get("task_id")
+        # Connecting to DB
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
 
+        # Updare current task
+        db.execute("UPDATE tasks SET heading = (?), description = (?), deadline_date = (?), status = (?) WHERE id = ?"
+        , (heading, description, deadline, status, task_id))
+        connection.commit()
+        connection.close()
+
+        # Kaip grysti i ta pacia task bet jau updatinta?
         return render_template("edit_task.html")
+
+@app.route("/add_note", methods=["POST"])
+def add_note():
+    note = request.form.get("note")
+    task_id = request.form.get("task_id")
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    db.execute("SELECT name FROM users WHERE user_id = ?", (session["user_id"],))
+    listName = db.fetchone()
+    name = listName[0]
+
+    # Add note to table
+    db.execute("INSERT INTO notes(task_id, note, user_name) VALUES (?, ?, ?)",
+    (task_id, note, name))
+    connection.commit()
+    connection.close()
+    # Kaip grysti i ta pacia task bet jau updatinta?
+    return render_template("edit_task.html")
 
 
 @app.route("/unassign", methods=["POST"])
