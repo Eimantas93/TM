@@ -70,18 +70,19 @@ body {
     display: flex;
     border: 1px solid black;
     width: 60%;
-    word-wrap: break-word;
-    flex-wrap: nowrap;
 }
 .notes-2 {
     background-color: #F8F8F8;
-    width: 16%;
+    width: 15%;
 }
 .notes-3 {
     margin-left: auto;
+    width: 15%;
+    background-color: #F8F8F8;
 }
 
-.notes-4 {
-    width: fit-content;
-    word-wrap: break-word;
+.notes-5 {
+    white-space: pre-wrap;
+    word-break: break-all;
+    width: auto;
 }

@@ -211,8 +211,38 @@ def edit_task():
         connection.commit()
         connection.close()
 
-        # Kaip grysti i ta pacia task bet jau updatinta?
-        return render_template("edit_task.html")
+        # Connecting to DB
+        connection = sqlite3.connect('data.db')
+        db = connection.cursor()
+
+        # Get current task data
+        db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
+
+        row = db.fetchone()
+
+        creator_id = row[1]
+        executor_id = row[2]
+        heading = row[3]
+        description = row[4]
+        creation_date = row[5]
+        deadline = row[6]
+        status = row[7]
+
+        db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
+        creatorList = db.fetchone()
+        creator_name = creatorList[0]
+
+        db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id,))
+        executorList = db.fetchone()
+        executor_name = executorList[0]
+
+        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+        notes = db.fetchall()
+
+        # NEED TO FIX THIS
+        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
+        , creator_name=creator_name, executor_name=executor_name, notes=notes)
+
 
 @app.route("/add_note", methods=["POST"])
 def add_note():
@@ -231,8 +261,38 @@ def add_note():
     (task_id, note, name))
     connection.commit()
     connection.close()
-    # Kaip grysti i ta pacia task bet jau updatinta?
-    return render_template("edit_task.html")
+
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    # Get current task data
+    db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
+
+    row = db.fetchone()
+
+    creator_id = row[1]
+    executor_id = row[2]
+    heading = row[3]
+    description = row[4]
+    creation_date = row[5]
+    deadline = row[6]
+    status = row[7]
+
+    db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
+    creatorList = db.fetchone()
+    creator_name = creatorList[0]
+
+    db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id,))
+    executorList = db.fetchone()
+    executor_name = executorList[0]
+
+    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+    notes = db.fetchall()
+
+    # NEED TO FIX THIS
+    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
+    , creator_name=creator_name, executor_name=executor_name, notes=notes)
 
 
 @app.route("/unassign", methods=["POST"])
@@ -280,7 +340,13 @@ def relations():
             "SELECT users.user_id, users.name, users.position, users.company, relations.supervisors_id, relations.subordinates_id FROM users INNER JOIN relations ON users.user_id = relations.user_id")
         joined_rows = db.fetchall()
 
-        return render_template("relations.html", rows=rows, relations=relations, joined_rows=joined_rows)
+        # To check if it's director of the company (for permisions)
+        director = 0
+        for row in relations:
+            if session["user_id"] == row[3]:
+                director = 1
+
+        return render_template("relations.html", rows=rows, relations=relations, joined_rows=joined_rows, director=director)
     else:
         selected_supervisors_id = request.form.get("new_supervisor")
         selected_subordinates_id = request.form.get("new_subordinate")

@@ -28,7 +28,11 @@ Task Manager
                     {% endfor %}
                     {% endif %}
                 </select>
-                <button type="submit">ASSIGN</button>
+                {% if director == 0 %}
+                <button type="submit" class="btn btn-primary" style="padding: 5px;">ASSIGN</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>ASSIGN</button>
+                {% endif %}
             </form>
         </div>
         <div>
@@ -50,27 +54,31 @@ Task Manager
                     {% endfor %}
                     {% endif %}
                 </select>
-                <button type="submit">UNASSIGN</button>
+                {% if director == 0 %}
+                <button type="submit" class="btn btn-primary" style="padding: 5px;">UNASSIGN</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>UNASSIGN</button>
+                {% endif %}
             </form>
         </div>
-        <table class="border">
+        <table class="borderr">
             <h3>Companies empoyees list</h3>
-            <tr>
-                <td>Username</td>
-                <td>Position</td>
-                <td>Supervisor</td>
-                <td>Subordinates</td>
+            <tr class="borderr" style="background-color: lightgray">
+                <th class="borderr">Username</th>
+                <th class="borderr">Position</th>
+                <th class="borderr">Supervisor</th>
+                <th class="borderr">Subordinates</th>
             </tr>
             {% if joined_rows is not none %}
             {% for row2 in rows %}
-            <tr class="border">
-                <td class="border">
+            <tr class="borderr">
+                <th class="borderr">
                     {{ row2[1] }}
-                </td>
-                <td class="border">
+                </th>
+                <td class="borderr">
                     {{ row2[3] }}
                 </td>
-                <td class="border">
+                <td class="borderr">
                     {% for joined_row in joined_rows %}
                     {% if row2[0] == joined_row[0] %}
                     {% for row3 in rows %}
@@ -81,7 +89,7 @@ Task Manager
                     {% endif %}
                     {% endfor %}
                 </td>
-                <td class="border">
+                <td class="borderr">
                     {% for joined_row in joined_rows %}
                     {% if row2[0] == joined_row[0] %}
                     {% for row3 in rows %}

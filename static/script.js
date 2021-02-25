@@ -1,7 +1,17 @@
-// Make comment box adjustable to input size
-$('textarea').each(function () {
-    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-  }).on('input', function () {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
+// Set current date as default value and min value 
+  $(document).ready(function() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    var today = year + "-" + month + "-" + day;       
+    $("#theDate").attr("value", today);
+    $("#theDate").attr("min", today);
+// Need another ID for editing task (we don't need default value, just min value)
+    $("#theDate2").attr("min", today);
+});
+

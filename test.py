@@ -13,9 +13,7 @@ app.permanent_session_lifetime = timedelta(days=1)
 connection = sqlite3.connect('data.db')
 db = connection.cursor()
  
-db.execute("SELECT * FROM tasks WHERE creator_id = 4 OR executor_id = 4")
-rows = db.fetchall()
+db.execute("SELECT * FROM relations")
+relations = db.fetchall()
 
-for row in rows:
-    print(row)
-print(rows)
+director = 0

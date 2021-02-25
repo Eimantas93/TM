@@ -33,7 +33,7 @@ Edit task
                 <th scope="col" class="borderName">Description</th>
                 <td class="borderr">
                 {% if creator_id == session["user_id"] %}
-                <textarea class="form-control" type="text" name="description" style="white-space: pre-wrap; height: 200px;" 
+                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
                 required> {{ description }}</textarea>
                 {% else %}
                 <textarea class="form-control" type="text" name="description" style="height: 200px;" 
@@ -49,7 +49,7 @@ Edit task
                 <th scope="col" class="borderName">Deadline</th>
                 <td class="borderr">
                     {% if session["user_id"] == creator_id %}
-                    <input type="date" value="{{ deadline }}" name="deadline" required>
+                    <input type="date" value="{{ deadline }}" name="deadline" id="theDate2" min='1899-01-01' required>
                     {% else %}
                     <input type="date" value="{{ deadline }}" name="deadline" disabled>
                     {% endif %}
@@ -96,7 +96,7 @@ Edit task
         <b>{{ note[1] }}:</b> 
             </div>
             <div class="notes-4">
-                <p type="text" style="white-space: pre-wrap; word-wrap: break-word;"> {{ note[0] }}</p>
+                <p class="notes-5" type="text"> {{ note[0] }}</p>
             </div>
             <div class="notes-3">
             {{ note[2] }}

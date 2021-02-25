@@ -37,8 +37,9 @@ Create new task
         </div>
         <label>Deadline: </label>
         <div class="form-group">
-            <input type="date" min="2021-02-25" value="2021-02-25" name="deadline" required>
+            <input type="date" id="theDate" name="deadline" min='1899-01-01' required>
         </div>
+        <input type="time" min="08:00" max="18:00">
         <div class="button">
             <button class="btn btn-primary" type="submit">Create Task</button>
         </div>
