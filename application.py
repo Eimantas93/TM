@@ -23,15 +23,25 @@ def index():
             connection = sqlite3.connect('data.db')
             db = connection.cursor()
 
-            # Getting data from tasks table, for current user (as creator and executor)
-            db.execute("SELECT * FROM tasks WHERE creator_id = ? OR executor_id = ? AND status = 0 ORDER BY creation_date DESC",
-               (session["user_id"], session["user_id"]))
-            rows = db.fetchall()
+            # Getting all not finished tasks for current user as creator (which he created to someone)
+            db.execute("SELECT * FROM tasks WHERE creator_id = ? AND status = 0 ORDER BY deadline_date",
+               (session["user_id"],))
+            creator = db.fetchall()
+
+            # Getting all not finished tasks for current user as executor (which someone created to him)
+            db.execute("SELECT * FROM tasks WHERE executor_id = ? AND status = 0 ORDER BY deadline_date", 
+            (session["user_id"],))
+            executor = db.fetchall()
+
+            # Get name of current user to show who is logged in
+            db.execute("SELECT name FROM users WHERE user_id = ?", (session["user_id"],))
+            nameList = db.fetchone()
+            name = nameList[0]
 
             db.execute("SELECT * FROM users")
             users = db.fetchall()
             # Passing all values to jinja
-            return render_template("index.html", rows=rows, users=users)
+            return render_template("index.html", creator=creator, executor=executor, users=users, name=name)
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
@@ -40,9 +50,7 @@ def index():
         task_id = request.form.get("task_id")
 
         # Get current task data
-        db.execute(
-            "SELECT * FROM tasks WHERE id = ?", (task_id))
-
+        db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
         row = db.fetchone()
 
         creator_id = row[1]
@@ -185,15 +193,18 @@ def tasks():
     connection = sqlite3.connect('data.db')
     db = connection.cursor()
 
-    # Get current user tasks history
-    db.execute("SELECT * FROM tasks WHERE creator_id = ? OR executor_id = ? ORDER BY creation_date DESC",
-               (session["user_id"], session["user_id"]))
-    rows = db.fetchall()
+    # Getting all not finished tasks for current user as creator (which he created to someone)
+    db.execute("SELECT * FROM tasks WHERE creator_id = ? ORDER BY creation_date DESC", (session["user_id"],))
+    creator = db.fetchall()
+
+    # Getting all not finished tasks for current user as executor (which someone created to him)
+    db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY creation_date DESC", (session["user_id"],))
+    executor = db.fetchall()
 
     db.execute("SELECT * FROM users")
     users = db.fetchall()
 
-    return render_template("tasks.html", rows=rows, users=users)
+    return render_template("tasks.html", creator=creator, executor=executor, users=users)
 
 
 @app.route("/edit_task", methods=["POST"])
