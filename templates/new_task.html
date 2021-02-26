@@ -14,10 +14,12 @@ Create new task
             <select id="task_for" name="task_for">
                 <option value="{{ user_id }}">Me</option>
 
-                <!-- // Checking for subordinates -->
+                <!-- // Checking for subordinates and supervisors -->
                 {% for row in rows %}
                 {% for relation in relations %}
                 {% if row[0] == relation[1] and user_id == relation[2] %}
+                <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
+                {% elif row[0] == relation[1] and user_id == relation[3] %}
                 <option value="{{ row[0] }}">{{ row[1] }} : {{ row[3] }}</option>
                 {% endif %}
                 {% endfor %}

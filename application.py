@@ -9,6 +9,9 @@ app.config['SECRET_KEY'] = 'sessions'
 # Store session data for 1 day, then log out
 app.permanent_session_lifetime = timedelta(days=1)
 
+@app.route("/test")
+def test():
+    return render_template("test.html")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
