@@ -50,7 +50,7 @@ def index():
         task_id = request.form.get("task_id")
 
         # Get current task data
-        db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
+        db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
         row = db.fetchone()
 
         creator_id = row[1]
@@ -69,7 +69,7 @@ def index():
         executorList = db.fetchone()
         executor_name = executorList[0]
 
-        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
         notes = db.fetchall()
 
         # NEED TO FIX THIS
