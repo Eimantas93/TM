@@ -28,7 +28,7 @@ Task Manager
                     {% endfor %}
                     {% endif %}
                 </select>
-                {% if director == 0 %}
+                {% if user[5] == 1 %}
                 <button type="submit" class="btn btn-primary" style="padding: 5px;">ASSIGN</button>
                 {% else %}
                 <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>ASSIGN</button>
@@ -54,7 +54,7 @@ Task Manager
                     {% endfor %}
                     {% endif %}
                 </select>
-                {% if director == 0 %}
+                {% if user[5] == 1 %}
                 <button type="submit" class="btn btn-primary" style="padding: 5px;">UNASSIGN</button>
                 {% else %}
                 <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>UNASSIGN</button>

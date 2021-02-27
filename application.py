@@ -9,10 +9,6 @@ app.config['SECRET_KEY'] = 'sessions'
 # Store session data for 1 day, then log out
 app.permanent_session_lifetime = timedelta(days=1)
 
-@app.route("/test")
-def test():
-    return render_template("test.html")
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -281,7 +277,7 @@ def add_note():
     db = connection.cursor()
 
     # Get current task data
-    db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
+    db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
 
     row = db.fetchone()
 
@@ -301,7 +297,7 @@ def add_note():
     executorList = db.fetchone()
     executor_name = executorList[0]
 
-    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
     notes = db.fetchall()
 
     # NEED TO FIX THIS
@@ -354,13 +350,7 @@ def relations():
             "SELECT users.user_id, users.name, users.position, users.company, relations.supervisors_id, relations.subordinates_id FROM users INNER JOIN relations ON users.user_id = relations.user_id")
         joined_rows = db.fetchall()
 
-        # To check if it's director of the company (for permisions)
-        director = 0
-        for row in relations:
-            if session["user_id"] == row[3]:
-                director = 1
-
-        return render_template("relations.html", rows=rows, relations=relations, joined_rows=joined_rows, director=director)
+        return render_template("relations.html", rows=rows, relations=relations, joined_rows=joined_rows, user=user_row)
     else:
         selected_supervisors_id = request.form.get("new_supervisor")
         selected_subordinates_id = request.form.get("new_subordinate")
