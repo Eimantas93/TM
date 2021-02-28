@@ -25,10 +25,12 @@ def index():
                        (session["user_id"],))
             creator = db.fetchall()
 
+            # Checking if there are any pending tasks for current user as creator (so we could write 'no tasks' if there are none)
             db.execute(
                 "SELECT SUM(pending) FROM tasks WHERE creator_id = ?", (session["user_id"],))
             creatorSum = db.fetchone()
 
+            # Checking if there are any pending tasks for current user as executor (so we could write 'no tasks' if there are none)
             db.execute(
                 "SELECT SUM(pending) FROM tasks WHERE executor_id = ?", (session["user_id"],))
             executorSum = db.fetchone()
@@ -92,10 +94,12 @@ def index():
         status = row[7]
         pending = row[8]
 
+        # Getting task creator real name;
         db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
         creatorList = db.fetchone()
         creator_name = creatorList[0]
 
+        # Getting task executor real name;
         db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id,))
         executorList = db.fetchone()
         executor_name = executorList[0]
@@ -277,13 +281,14 @@ def edit_task():
             connection.commit()
             connection.close()
 
-            # If executer is updating the task, then set task to 'pending'
-            # and show task status, which executer wants to apply (cancel / finish) (since executer can only edit task status)
-        elif session["user_id"] == check[2]:
+            # If executer is updating the task status, then set task to 'pending'
+        elif session["user_id"] == check[2] and status != '0':
             db.execute(
                 "UPDATE tasks SET pending = '1', status = (?) WHERE id = ?", (status, task_id))
             connection.commit()
             connection.close()
+
+        # If executer is only adding micro tasks, then do nothing (code for adding mircro tasks, already added above)
 
         # Rendering updated task______________________________
 

@@ -13,5 +13,8 @@
     $("#theDate").attr("min", today);
 // Need another ID for editing task (we don't need default value, just min value)
     $("#theDate2").attr("min", today);
+// Need another ID for 'Start date' time (because same one doesn't work)
+    $("#theDate3").attr("value", today);
+    $("#theDate3").attr("min", today);
 });
 
