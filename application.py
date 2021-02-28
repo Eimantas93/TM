@@ -20,12 +20,18 @@ def index():
             db = connection.cursor()
 
             # Getting all not finished tasks for current user as creator (which he created to someone)
-            db.execute("SELECT * FROM tasks WHERE creator_id = ? AND status = 0 ORDER BY deadline_date",
+            db.execute("SELECT * FROM tasks WHERE creator_id = ? ORDER BY deadline_date",
                (session["user_id"],))
             creator = db.fetchall()
 
+            db.execute("SELECT SUM(pending) FROM tasks WHERE creator_id = ?", (session["user_id"],))
+            creatorSum = db.fetchone()
+
+            db.execute("SELECT SUM(pending) FROM tasks WHERE executor_id = ?", (session["user_id"],))
+            executorSum = db.fetchone()
+
             # Getting all not finished tasks for current user as executor (which someone created to him)
-            db.execute("SELECT * FROM tasks WHERE executor_id = ? AND status = 0 ORDER BY deadline_date", 
+            db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY deadline_date", 
             (session["user_id"],))
             executor = db.fetchall()
 
@@ -37,7 +43,7 @@ def index():
             db.execute("SELECT * FROM users")
             users = db.fetchall()
             # Passing all values to jinja
-            return render_template("index.html", creator=creator, executor=executor, users=users, name=name)
+            return render_template("index.html", creator=creator, executor=executor, users=users, name=name, creatorSum=creatorSum, executorSum=executorSum)
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
@@ -56,6 +62,7 @@ def index():
         creation_date = row[5]
         deadline = row[6]
         status = row[7]
+        pending = row[8]
 
         db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
         creatorList = db.fetchone()
@@ -70,7 +77,7 @@ def index():
 
         # NEED TO FIX THIS
         return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-        , creator_name=creator_name, executor_name=executor_name, notes=notes)
+        , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -172,10 +179,11 @@ def new_task():
         description = request.form.get("description")
         deadline = request.form.get("deadline")
         status = 0
+        pending = 0
 
         # Storing user task into db table
-        db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, deadline_date, status) VALUES (?, ?, ?, ?, ?, ?)",
-                   (session["user_id"], executor, heading, description, deadline, status))
+        db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, deadline_date, status, pending) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                   (session["user_id"], executor, heading, description, deadline, status, pending))
         connection.commit()
         connection.close()
 
@@ -211,22 +219,38 @@ def edit_task():
         deadline = request.form.get("deadline")
         status = request.form.get("status")
         task_id = request.form.get("task_id")
+
+        # When changes are submited on 'edit task'___________________________
         # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
-        # Updare current task
-        db.execute("UPDATE tasks SET heading = (?), description = (?), deadline_date = (?), status = (?) WHERE id = ?"
-        , (heading, description, deadline, status, task_id))
-        connection.commit()
-        connection.close()
+        # Checking who is making changes
+        db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
+        check = db.fetchone()
+
+        # If task creator is changing task, just update it
+        if session["user_id"] == check[1]:
+            db.execute("UPDATE tasks SET heading = (?), description = (?), deadline_date = (?), status = (?) WHERE id = ?"
+            , (heading, description, deadline, status, task_id))
+            connection.commit()
+            connection.close()
+    
+            # If executer is updating the task, then set task to 'pending'
+            # and show task status, which executer wants to apply (cancel / finish) (since executer can only edit task status)
+        elif session["user_id"] == check[2]:
+            db.execute("UPDATE tasks SET pending = '1', status = (?) WHERE id = ?", (status, task_id))
+            connection.commit()
+            connection.close()
+
+        # Rendering updated task______________________________
 
         # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
 
         # Get current task data
-        db.execute("SELECT * FROM tasks WHERE id = ?", (task_id))
+        db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
 
         row = db.fetchone()
 
@@ -237,6 +261,7 @@ def edit_task():
         creation_date = row[5]
         deadline = row[6]
         status = row[7]
+        pending = row[8]
 
         db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
         creatorList = db.fetchone()
@@ -246,12 +271,12 @@ def edit_task():
         executorList = db.fetchone()
         executor_name = executorList[0]
 
-        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", (task_id))
+        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
         notes = db.fetchall()
 
         # NEED TO FIX THIS
         return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-        , creator_name=creator_name, executor_name=executor_name, notes=notes)
+        , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
 
 
 @app.route("/add_note", methods=["POST"])
@@ -288,6 +313,7 @@ def add_note():
     creation_date = row[5]
     deadline = row[6]
     status = row[7]
+    pending = row[8]
 
     db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
     creatorList = db.fetchone()
@@ -302,7 +328,7 @@ def add_note():
 
     # NEED TO FIX THIS
     return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-    , creator_name=creator_name, executor_name=executor_name, notes=notes)
+    , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
 
 
 @app.route("/unassign", methods=["POST"])
@@ -369,3 +395,58 @@ def relations():
         connection.close()
 
         return redirect(url_for("relations"))
+
+@app.route("/approval", methods=["POST"])
+def approval():
+    task_id = request.form.get("task_id")
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    # Checking if creator approved or dissaproved the task
+    # If approved, then finish the task and remove 'pending' status
+    if request.form.get("approve") == 'yes':
+        db.execute("UPDATE tasks SET pending = '0' WHERE id = ?", (task_id,))
+        connection.commit()
+        connection.close()
+
+        # if not approved, change status to 'in progress' and remove 'pending' status
+    elif request.form.get("approve") == 'no':
+        db.execute("UPDATE tasks SET pending = '0', status = '0' WHERE id = ?", (task_id,))
+        connection.commit()
+        connection.close()
+
+    # Rendering updated task______________________________
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    # Get current task data
+    db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
+
+    row = db.fetchone()
+
+    creator_id = row[1]
+    executor_id = row[2]
+    heading = row[3]
+    description = row[4]
+    creation_date = row[5]
+    deadline = row[6]
+    status = row[7]
+    pending = row[8]
+
+    db.execute("SELECT name FROM users WHERE user_id = ?", (creator_id,))
+    creatorList = db.fetchone()
+    creator_name = creatorList[0]
+
+    db.execute("SELECT name FROM users WHERE user_id = ?", (executor_id,))
+    executorList = db.fetchone()
+    executor_name = executorList[0]
+
+    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
+    notes = db.fetchall()
+
+    # NEED TO FIX THIS
+    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
+    , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+

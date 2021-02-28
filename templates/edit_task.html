@@ -5,12 +5,16 @@ Edit task
 {% endblock %}
 
 {% block main %}
-
 <h1 class="pageTitle">Edit task</h1>
 <hr>
 <center>
     <form action="/edit_task" method="POST" class="form-2">
         <table class="table">
+            <tr class="borderr">
+                <th scope="col" class="borderName">Task ID</th>
+                    <td class="borderr">{{ task_id }}</td>
+                </td>
+            </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName">Creator name</th>
                 <td class="borderr">{{ creator_name }}</td>
@@ -55,6 +59,7 @@ Edit task
                     {% endif %}
                 </td>
             </tr>
+            {% if pending == 0 %}
             <tr class="borderr">
                 <th scope="col" class="borderName">Status</th>
                 <td class="borderr" value="{{ status }}">
@@ -67,6 +72,20 @@ Edit task
                     {% endif %}
                 </td>
             </tr>
+
+            {% elif pending == 1 %}
+            <tr class="borderr" style="background-color: indianred;">
+                <th scope="col" class="borderName"> Changing to </th>
+                <td class="borderr" value="{{ status }}">
+                    {% if status == 1 %}
+                    Finished
+                    {% elif status == 2 %}
+                    Canceled
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+
             {% if status == 0 %}
             <tr class="borderr">
                 <th scope="col" class="borderName">Change status</th>
@@ -80,14 +99,25 @@ Edit task
             </tr>
             {% endif %}
         </table>
-        {% if status == 0 %}
+        {% if status == 0 and pending == 0 %}
         <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}">Submit changes</button>
-        {% else %}
+        {% elif status != 0 and pending == 0 %}
         <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}" disabled>Submit changes</button>
         <br>
         <label style="color: red; font-size: small;">*Canceled or Finished tasks can't be edited.</label>
         {% endif %}
-    </form>
+        </form>
+        {% if pending == 1 and session["user_id"] == creator_id %}
+        <form action="/approval" method="POST">
+        <input type="radio" id="approveYes" name="approve" value="yes">
+        <label for="approveYes"> Approve status </label><br>
+        <input type="radio" id="approveNo" name="approve" value="no">
+        <label for="approveNo"> Disapprove status</label><br>
+        <button type="sumbit" class="btn btn-primary" name="task_id" value="{{ task_id }}">Submit</button>
+        </form>
+        {% elif pending == 1 and session["user_id"] == executor_id %}
+        <h4 style="color: red;">Waiting for 'Approval' from <b>{{ creator_name }}</b>.</h4>
+        {% endif %}
         <hr>
         <h2 class="pageTitle">Notes list:</h2>
         {% for note in notes %}

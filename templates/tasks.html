@@ -17,11 +17,11 @@ Task Manager
     </div>
   </nav>
   <div class="tab-content" id="nav-tabContent">
-      
+
           <!-- TASKS ASSGNED TO YOU | FINISHED -->
           <div class="tab-pane fade show active" id="nav-executorF" role="tabpanel" aria-labelledby="nav-executorF-tab">
             {% for row in executor %}
-            {% if row[1] != row[2] and row[7] == 1 %}
+            {% if row[1] != row[2] and row[7] == 1 and row[8] == 0 %}
     <div class="container-2" style="margin-top: 20px;">
         <form action="/" method="POST">
             <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -81,7 +81,7 @@ Task Manager
         <!-- TASKS ASSIGNED BY YOU | FINISHED -->
         <div class="tab-pane fade" id="nav-creatorF" role="tabpanel" aria-labelledby="nav-creatorF-tab">
             {% for row in creator %}
-            {% if row[1] != row[2] and row[7] == 1 %}
+            {% if row[1] != row[2] and row[7] == 1 and row[8] == 0 %}
         <div class="container-2" style="margin-top: 20px;">
             <form action="/" method="POST">
                 <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -141,7 +141,7 @@ Task Manager
             <!-- TASKS ASSIGNED TO YOURSELF | FINISHED -->
         <div class="tab-pane fade" id="nav-yourTasksF" role="tabpanel" aria-labelledby="nav-yourTasksF-tab">
             {% for row in creator %}
-            {% if row[1] == row[2] and row[7] == 1 %}
+            {% if row[1] == row[2] and row[7] == 1 and row[8] == 0 %}
         <div class="container-2" style="margin-top: 20px;">
             <form action="/" method="POST">
                 <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -199,9 +199,9 @@ Task Manager
         </div>
 
                   <!-- TASKS ASSGNED TO YOU | CANCELED -->
-                  <div class="tab-pane fade show active" id="nav-executorC" role="tabpanel" aria-labelledby="nav-executorC-tab">
+                  <div class="tab-pane fade" id="nav-executorC" role="tabpanel" aria-labelledby="nav-executorC-tab">
                     {% for row in executor %}
-                    {% if row[1] != row[2] and row[7] == 2 %}
+                    {% if row[1] != row[2] and row[7] == 2 and row[8] == 0 %}
             <div class="container-2" style="margin-top: 20px;">
                 <form action="/" method="POST">
                     <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -261,7 +261,7 @@ Task Manager
                 <!-- TASKS ASSIGNED BY YOU | CANCELED -->
                 <div class="tab-pane fade" id="nav-creatorC" role="tabpanel" aria-labelledby="nav-creatorC-tab">
                     {% for row in creator %}
-                    {% if row[1] != row[2] and row[7] == 2 %}
+                    {% if row[1] != row[2] and row[7] == 2 and row[8] == 0 %}
                 <div class="container-2" style="margin-top: 20px;">
                     <form action="/" method="POST">
                         <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -308,7 +308,7 @@ Task Manager
                             </tr>
                             <tr class="borderr">
                                 <th scope="col" class="borderName">Status</th>
-                                <td class="borderr">Finished</td>
+                                <td class="borderr">Canceled</td>
                             </tr>
                         </table>
                         <hr>
@@ -321,7 +321,7 @@ Task Manager
                     <!-- TASKS ASSIGNED TO YOURSELF | CANCELED -->
                 <div class="tab-pane fade" id="nav-yourTasksC" role="tabpanel" aria-labelledby="nav-yourTasksC-tab">
                     {% for row in creator %}
-                    {% if row[1] == row[2] and row[7] == 2 %}
+                    {% if row[1] == row[2] and row[7] == 2 and row[8] == 0 %}
                 <div class="container-2" style="margin-top: 20px;">
                     <form action="/" method="POST">
                         <button type="submit" name="task_id" value="{{ row[0] }}" class="edit">&#9997; View task</button>
@@ -377,6 +377,6 @@ Task Manager
                 {% endif %}
                 {% endfor %}
                 </div>
-
+                                
   </div>
 {% endblock %}
