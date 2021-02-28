@@ -5,7 +5,7 @@ Task Manager
 {% endblock %}
 
 {% block main %}
-<h1 class="pageTitle">{{ rows[0][4] }} relations.</h1>
+<h1 class="pageTitle">"{{ rows[0][4] }}" relations.</h1>
 <hr>
 <div class="container-1">
     <center>
@@ -29,14 +29,14 @@ Task Manager
                     {% endif %}
                 </select>
                 {% if user[5] == 1 %}
-                <button type="submit" class="btn btn-primary" style="padding: 5px;">ASSIGN</button>
+                <button type="submit" class="btn btn-primary" style="padding: 5px; margin-bottom: 10px;">ASSIGN</button>
                 {% else %}
-                <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>ASSIGN</button>
+                <button type="submit" class="btn btn-primary" style="padding: 5px; margin-bottom: 10px;" disabled>ASSIGN</button>
                 {% endif %}
             </form>
         </div>
         <div>
-            <form class="border" action="/unassign" method="POST">
+            <form class="border" action="/unassign" method="POST" style="margin-top: 20px;">
                 <h3>Unassign supervisor for subordinate</h3>
                 <label>Supervisor</label>
                 <select name="selected_supervisors_id">
@@ -55,22 +55,26 @@ Task Manager
                     {% endif %}
                 </select>
                 {% if user[5] == 1 %}
-                <button type="submit" class="btn btn-primary" style="padding: 5px;">UNASSIGN</button>
+                <button type="submit" class="btn btn-primary" style="padding: 5px; margin-bottom: 10px;">UNASSIGN</button>
                 {% else %}
-                <button type="submit" class="btn btn-primary" style="padding: 5px;" disabled>UNASSIGN</button>
+                <button type="submit" class="btn btn-primary" style="padding: 5px; margin-bottom: 10px;" disabled>UNASSIGN</button>
                 {% endif %}
             </form>
         </div>
-        <table class="borderr">
-            <h3>Companies empoyees list</h3>
-            <tr class="borderr" style="background-color: lightgray">
+        <hr>
+        <h4 style="margin-top: 30px;"><b>"{{ rows[0][4] }}" structure</b></h4>
+        <table class="styled-table">
+            <thead>
+            <tr>
                 <th class="borderr">Username</th>
                 <th class="borderr">Position</th>
                 <th class="borderr">Supervisor</th>
                 <th class="borderr">Subordinates</th>
             </tr>
+            </thead>
             {% if joined_rows is not none %}
             {% for row2 in rows %}
+            <tbody>
             <tr class="borderr">
                 <th class="borderr">
                     {{ row2[1] }}
@@ -101,9 +105,11 @@ Task Manager
                     {% endfor %}
                 </td>
             </tr>
+            </tbody>
             {% endfor %}
             {% endif %}
         </table>
     </center>
 </div>
+
 {% endblock %}
