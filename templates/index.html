@@ -6,6 +6,7 @@ Task Manager
 
 {% block main %}
 
+<!-- FOR SOME REASON, THIS DOESN'T WORK FROM STYLE.CSS FILE, NEED TO CHECK ON THIS LATER -->
 <head>
     <style>
         .Timeline {
@@ -243,10 +244,12 @@ Task Manager
                         <th scope="col" class="borderName" tyle="white-space: pre-wrap;">Heading</th>
                         <td class="borderr">{{ row[3] }}</td>
                     </tr>
-                    <tr class="borderr">
+
+                            <!-- We are showing deadling in process tab -->
+                    <!-- <tr class="borderr">
                         <th scope="col" class="borderName">Deadline</th>
                         <td class="borderr">{{ row[6] }}</td>
-                    </tr>
+                    </tr> -->
                     {% include 'process.html' %}
                 </table>
                 <hr>
@@ -282,10 +285,11 @@ Task Manager
                         <th scope="col" class="borderName" style="white-space: pre-wrap;">Heading</th>
                         <td class="borderr">{{ row[3] }}</td>
                     </tr>
-                    <tr class="borderr">
+                            <!-- We are showing deadling in process tab -->
+                    <!-- <tr class="borderr">
                         <th scope="col" class="borderName">Deadline</th>
                         <td class="borderr">{{ row[6] }}</td>
-                    </tr>
+                    </tr> -->
                     {% include 'process.html' %}
                 </table>
                 <hr>
@@ -315,10 +319,11 @@ Task Manager
                         <th scope="col" class="borderName" tyle="white-space: pre-wrap;">Heading</th>
                         <td class="borderr">{{ row[3] }}</td>
                     </tr>
-                    <tr class="borderr">
+                            <!-- We are showing deadling in process tab -->
+                    <!-- <tr class="borderr">
                         <th scope="col" class="borderName">Deadline</th>
                         <td class="borderr">{{ row[6] }}</td>
-                    </tr>
+                    </tr> -->
                     <!-- PROCESS.html -->
                     {% include 'process.html' %}
                 </table>
@@ -366,10 +371,12 @@ Task Manager
                         <th scope="col" class="borderName" tyle="white-space: pre-wrap;">Heading</th>
                         <td class="borderr">{{ row[3] }}</td>
                     </tr>
-                    <tr class="borderr">
+
+                    <!-- We are showing deadling in process tab -->
+                    <!-- <tr class="borderr">
                         <th scope="col" class="borderName">Deadline</th>
                         <td class="borderr">{{ row[6] }}</td>
-                    </tr>
+                    </tr> -->
                     <tr class="borderr" style="background-color: indianred;">
                         <th scope="col" class="borderName"> Changing to </th>
                         <td class="borderr">
@@ -419,10 +426,11 @@ Task Manager
                         <th scope="col" class="borderName" tyle="white-space: pre-wrap;">Heading</th>
                         <td class="borderr">{{ row[3] }}</td>
                     </tr>
-                    <tr class="borderr">
+                            <!-- We are showing deadling in process tab -->
+                    <!-- <tr class="borderr">
                         <th scope="col" class="borderName">Deadline</th>
                         <td class="borderr">{{ row[6] }}</td>
-                    </tr>
+                    </tr> -->
                     <tr class="borderr" style="background-color: indianred;">
                         <th scope="col" class="borderName"> Changing to </th>
                         <td class="borderr">
@@ -444,20 +452,4 @@ Task Manager
     </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% endblock %}

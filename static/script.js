@@ -16,5 +16,7 @@
 // Need another ID for 'Start date' time (because same one doesn't work)
     $("#theDate3").attr("value", today);
     $("#theDate3").attr("min", today);
+// Need another ID for creating micro tasks, only min attr
+    $("#theDate4").attr("min", today);
 });
 
