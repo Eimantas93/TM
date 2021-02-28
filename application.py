@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, session, url_for, redirect
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 
 app = Flask(__name__)
 # To encrypt and decrypt sessions data
 app.config['SECRET_KEY'] = 'sessions'
 # Store session data for 1 day, then log out
 app.permanent_session_lifetime = timedelta(days=1)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -21,29 +22,56 @@ def index():
 
             # Getting all not finished tasks for current user as creator (which he created to someone)
             db.execute("SELECT * FROM tasks WHERE creator_id = ? ORDER BY deadline_date",
-               (session["user_id"],))
+                       (session["user_id"],))
             creator = db.fetchall()
 
-            db.execute("SELECT SUM(pending) FROM tasks WHERE creator_id = ?", (session["user_id"],))
+            db.execute(
+                "SELECT SUM(pending) FROM tasks WHERE creator_id = ?", (session["user_id"],))
             creatorSum = db.fetchone()
 
-            db.execute("SELECT SUM(pending) FROM tasks WHERE executor_id = ?", (session["user_id"],))
+            db.execute(
+                "SELECT SUM(pending) FROM tasks WHERE executor_id = ?", (session["user_id"],))
             executorSum = db.fetchone()
 
             # Getting all not finished tasks for current user as executor (which someone created to him)
-            db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY deadline_date", 
-            (session["user_id"],))
+            db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY deadline_date",
+                       (session["user_id"],))
             executor = db.fetchall()
 
             # Get name of current user to show who is logged in
-            db.execute("SELECT name FROM users WHERE user_id = ?", (session["user_id"],))
+            db.execute("SELECT name FROM users WHERE user_id = ?",
+                       (session["user_id"],))
             nameList = db.fetchone()
             name = nameList[0]
 
             db.execute("SELECT * FROM users")
             users = db.fetchall()
+
+#############################################################################
+            # Get current user tasks history
+            db.execute("SELECT id, creator_id, executor_id, heading, description, creation_date, deadline_date, status, julianday(deadline_date) - julianday(creation_date) FROM tasks WHERE creator_id = ? OR executor_id = ? ORDER BY creation_date DESC",
+                       (session["user_id"], session["user_id"]))
+            rows = db.fetchall()
+
+            db.execute("SELECT * FROM users")
+            users = db.fetchall()
+
+            db.execute("SELECT * FROM task_stages")
+            task_stages = db.fetchall()
+
+            now = date.today()
+
+            db.execute(
+                "SELECT julianday(?) - julianday(creation_date), id FROM tasks WHERE creator_id = ? OR executor_id = ? ORDER BY creation_date DESC",
+                (now, session["user_id"], session["user_id"]))
+            today = db.fetchall()
+
+            db.execute(
+                "SELECT julianday(task_stages.date) - julianday(tasks.creation_date), task_stages.id, task_stages.task_id, task_stages.heading, task_stages.description, task_stages.date  FROM tasks INNER JOIN task_stages ON tasks.id = task_stages.task_id")
+            durations_and_stages = db.fetchall()
+
             # Passing all values to jinja
-            return render_template("index.html", creator=creator, executor=executor, users=users, name=name, creatorSum=creatorSum, executorSum=executorSum)
+            return render_template("index.html", creator=creator, executor=executor, name=name, creatorSum=creatorSum, executorSum=executorSum, users=users, rows=rows, today=today, task_stages=task_stages, durations_and_stages=durations_and_stages, now=now)
     else:
         # Connecting to DB
         connection = sqlite3.connect('data.db')
@@ -72,12 +100,15 @@ def index():
         executorList = db.fetchone()
         executor_name = executorList[0]
 
-        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
+        db.execute(
+            "SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
         notes = db.fetchall()
 
+        db.execute("SELECT * FROM task_stages")
+        task_stages = db.fetchmany()
+
         # NEED TO FIX THIS
-        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-        , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status, creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending, task_stages=task_stages)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -177,13 +208,14 @@ def new_task():
         executor = request.form.get("task_for")
         heading = request.form.get("heading")
         description = request.form.get("description")
+        start_date = request.form.get("start_date")
         deadline = request.form.get("deadline")
         status = 0
         pending = 0
 
         # Storing user task into db table
-        db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, deadline_date, status, pending) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                   (session["user_id"], executor, heading, description, deadline, status, pending))
+        db.execute("INSERT INTO tasks(creator_id, executor_id, heading, description, creation_date, deadline_date, status, pending) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   (session["user_id"], executor, heading, description, start_date, deadline, status, pending))
         connection.commit()
         connection.close()
 
@@ -198,11 +230,13 @@ def tasks():
     db = connection.cursor()
 
     # Getting all not finished tasks for current user as creator (which he created to someone)
-    db.execute("SELECT * FROM tasks WHERE creator_id = ? ORDER BY creation_date DESC", (session["user_id"],))
+    db.execute("SELECT * FROM tasks WHERE creator_id = ? ORDER BY creation_date DESC",
+               (session["user_id"],))
     creator = db.fetchall()
 
     # Getting all not finished tasks for current user as executor (which someone created to him)
-    db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY creation_date DESC", (session["user_id"],))
+    db.execute("SELECT * FROM tasks WHERE executor_id = ? ORDER BY creation_date DESC",
+               (session["user_id"],))
     executor = db.fetchall()
 
     db.execute("SELECT * FROM users")
@@ -219,11 +253,18 @@ def edit_task():
         deadline = request.form.get("deadline")
         status = request.form.get("status")
         task_id = request.form.get("task_id")
+        micro_task = request.form.get("micro_task")
+        micro_task_date = request.form.get("micro_task_date")
 
         # When changes are submited on 'edit task'___________________________
         # Connecting to DB
         connection = sqlite3.connect('data.db')
         db = connection.cursor()
+
+        # Insert micro task heading and date to task_stages table
+        db.execute("INSERT INTO task_stages(task_id, heading, date) VALUES (?, ?, ?)",
+                   (task_id, micro_task, micro_task_date))
+        connection.commit()
 
         # Checking who is making changes
         db.execute("SELECT * FROM tasks WHERE id = ?", [task_id])
@@ -231,15 +272,16 @@ def edit_task():
 
         # If task creator is changing task, just update it
         if session["user_id"] == check[1]:
-            db.execute("UPDATE tasks SET heading = (?), description = (?), deadline_date = (?), status = (?) WHERE id = ?"
-            , (heading, description, deadline, status, task_id))
+            db.execute("UPDATE tasks SET heading = (?), description = (?), deadline_date = (?), status = (?) WHERE id = ?",
+                       (heading, description, deadline, status, task_id))
             connection.commit()
             connection.close()
-    
+
             # If executer is updating the task, then set task to 'pending'
             # and show task status, which executer wants to apply (cancel / finish) (since executer can only edit task status)
         elif session["user_id"] == check[2]:
-            db.execute("UPDATE tasks SET pending = '1', status = (?) WHERE id = ?", (status, task_id))
+            db.execute(
+                "UPDATE tasks SET pending = '1', status = (?) WHERE id = ?", (status, task_id))
             connection.commit()
             connection.close()
 
@@ -271,12 +313,15 @@ def edit_task():
         executorList = db.fetchone()
         executor_name = executorList[0]
 
-        db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
+        db.execute(
+            "SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
         notes = db.fetchall()
 
+        db.execute("SELECT * FROM task_stages")
+        task_stages = db.fetchmany()
+
         # NEED TO FIX THIS
-        return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-        , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+        return render_template("edit_task.html", task_stages=task_stages, task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status, creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
 
 
 @app.route("/add_note", methods=["POST"])
@@ -287,13 +332,14 @@ def add_note():
     connection = sqlite3.connect('data.db')
     db = connection.cursor()
 
-    db.execute("SELECT name FROM users WHERE user_id = ?", (session["user_id"],))
+    db.execute("SELECT name FROM users WHERE user_id = ?",
+               (session["user_id"],))
     listName = db.fetchone()
     name = listName[0]
 
     # Add note to table
     db.execute("INSERT INTO notes(task_id, note, user_name) VALUES (?, ?, ?)",
-    (task_id, note, name))
+               (task_id, note, name))
     connection.commit()
     connection.close()
 
@@ -323,12 +369,29 @@ def add_note():
     executorList = db.fetchone()
     executor_name = executorList[0]
 
-    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
+    db.execute(
+        "SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
     notes = db.fetchall()
 
     # NEED TO FIX THIS
-    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-    , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status, creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+
+
+@app.route("/delete_stage", methods=["POST"])
+def delete_stage():
+    stage_id = request.form.get("stage_id")
+
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+
+    connection.execute("DELETE * FROM task_stages WHERE id=?",
+                       (stage_id))
+
+    connection.commit()
+    connection.close()
+
+    return redirect(url_for("edit_task"))
 
 
 @app.route("/unassign", methods=["POST"])
@@ -396,6 +459,7 @@ def relations():
 
         return redirect(url_for("relations"))
 
+
 @app.route("/approval", methods=["POST"])
 def approval():
     task_id = request.form.get("task_id")
@@ -412,7 +476,8 @@ def approval():
 
         # if not approved, change status to 'in progress' and remove 'pending' status
     elif request.form.get("approve") == 'no':
-        db.execute("UPDATE tasks SET pending = '0', status = '0' WHERE id = ?", (task_id,))
+        db.execute(
+            "UPDATE tasks SET pending = '0', status = '0' WHERE id = ?", (task_id,))
         connection.commit()
         connection.close()
 
@@ -443,10 +508,9 @@ def approval():
     executorList = db.fetchone()
     executor_name = executorList[0]
 
-    db.execute("SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
+    db.execute(
+        "SELECT note, user_name, creation_date FROM notes WHERE task_id = ? ORDER BY creation_date DESC", [task_id])
     notes = db.fetchall()
 
     # NEED TO FIX THIS
-    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status
-    , creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
-
+    return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status, creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)

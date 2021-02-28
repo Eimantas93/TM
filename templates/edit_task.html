@@ -12,7 +12,7 @@ Edit task
         <table class="table">
             <tr class="borderr">
                 <th scope="col" class="borderName">Task ID</th>
-                    <td class="borderr">{{ task_id }}</td>
+                <td class="borderr">{{ task_id }}</td>
                 </td>
             </tr>
             <tr class="borderr">
@@ -27,22 +27,53 @@ Edit task
                 <th scope="col" class="borderName">Heading</th>
                 <td class="borderr">
                     {% if session["user_id"] == creator_id %}
-                    <input autocomplete="off" type="text" class="form-control" name="heading" value= "{{ heading }}" required>
+                    <input autocomplete="off" type="text" class="form-control" name="heading" value="{{ heading }}"
+                        required>
                     {% else %}
-                    <input autocomplete="off" type="text" class="form-control" name="heading" value= "{{ heading }}" disabled>
+                    <input autocomplete="off" type="text" class="form-control" name="heading" value="{{ heading }}"
+                        disabled>
                     {% endif %}
                 </td>
             </tr>
             <tr class="borderr">
                 <th scope="col" class="borderName">Description</th>
                 <td class="borderr">
-                {% if creator_id == session["user_id"] %}
-                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
-                required> {{ description }}</textarea>
-                {% else %}
-                <textarea class="form-control" type="text" name="description" style="height: 200px;" 
-                disabled> {{ description }}</textarea>
-                {% endif %}
+                    {% if creator_id == session["user_id"] %}
+                    <textarea class="form-control" type="text" name="description" style="height: 200px;"
+                        required> {{ description }}</textarea>
+                    {% else %}
+                    <textarea class="form-control" type="text" name="description" style="height: 200px;"
+                        disabled> {{ description }}</textarea>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="borderr">
+                <th scope="col" class="borderName">Micro-task heading</th>
+                <td class="borderr">
+                    <input autocomplete="off" type="text" class="form-control" name="micro_task"
+                        placeholder="If required">
+                </td>
+            </tr>
+            <!--
+            <tr class="borderr">
+                <th scope="col" class="borderName">Micro-tasks</th>
+                <td class="borderr">
+                    {% for stage in task_stages %}
+                    {% set stage_task_id = stage[1] | int %}
+                    {% set task_id = task_id | int %}
+                    {% if stage_task_id == task_id %}
+                    <form action="/delete_stage" method="POST" class="form-2">
+                        {{stage[2]}} - {{stage[4]}} <button type="submit" class="btn btn-primary" name="stage_id"
+                            value="{{ stage[0] }}">Delete</button>
+                    </form>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            -->
+            <tr class="borderr">
+                <th scope="col" class="borderName">Task ID</th>
+                <td class="borderr">{{ task_id }}</td>
                 </td>
             </tr>
             <tr class="borderr">
@@ -90,11 +121,11 @@ Edit task
             <tr class="borderr">
                 <th scope="col" class="borderName">Change status</th>
                 <td class="borderr">
-                <select name="status">
-                    <option value="0">In Progress</option>
-                    <option value="1">Finish</option>
-                    <option value="2">Cancel</option>
-                </select>
+                    <select name="status">
+                        <option value="0">In Progress</option>
+                        <option value="1">Finish</option>
+                        <option value="2">Cancel</option>
+                    </select>
                 </td>
             </tr>
             {% endif %}
@@ -102,44 +133,46 @@ Edit task
         {% if status == 0 and pending == 0 %}
         <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}">Submit changes</button>
         {% elif status != 0 and pending == 0 %}
-        <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}" disabled>Submit changes</button>
+        <button type="submit" class="btn btn-primary" name="task_id" value="{{ task_id }}" disabled>Submit
+            changes</button>
         <br>
         <label style="color: red; font-size: small;">*Canceled or Finished tasks can't be edited.</label>
         {% endif %}
-        </form>
-        {% if pending == 1 and session["user_id"] == creator_id %}
-        <form action="/approval" method="POST">
+    </form>
+    {% if pending == 1 and session["user_id"] == creator_id %}
+    <form action="/approval" method="POST">
         <input type="radio" id="approveYes" name="approve" value="yes">
         <label for="approveYes"> Approve status </label><br>
         <input type="radio" id="approveNo" name="approve" value="no">
         <label for="approveNo"> Disapprove status</label><br>
         <button type="sumbit" class="btn btn-primary" name="task_id" value="{{ task_id }}">Submit</button>
-        </form>
-        {% elif pending == 1 and session["user_id"] == executor_id %}
-        <h4 style="color: red;">Waiting for 'Approval' from <b>{{ creator_name }}</b>.</h4>
-        {% endif %}
-        <hr>
-        <h2 class="pageTitle">Notes list:</h2>
-        {% for note in notes %}
-        <div class="notes-1">
-            <div class="notes-2">
-        <b>{{ note[1] }}:</b> 
-            </div>
-            <div class="notes-4">
-                <p class="notes-5" type="text"> {{ note[0] }}</p>
-            </div>
-            <div class="notes-3">
-            {{ note[2] }}
-            </div>
+    </form>
+    {% elif pending == 1 and session["user_id"] == executor_id %}
+    <h4 style="color: red;">Waiting for 'Approval' from <b>{{ creator_name }}</b>.</h4>
+    {% endif %}
+    <hr>
+    <h2 class="pageTitle">Notes list:</h2>
+    {% for note in notes %}
+    <div class="notes-1">
+        <div class="notes-2">
+            <b>{{ note[1] }}:</b>
         </div>
-        {% endfor %}
-        <hr>
-        <label>Add new note:</label>
-        <form action="/add_note" method="POST" class="form-2">
+        <div class="notes-4">
+            <p class="notes-5" type="text"> {{ note[0] }}</p>
+        </div>
+        <div class="notes-3">
+            {{ note[2] }}
+        </div>
+    </div>
+    {% endfor %}
+    <hr>
+    <label>Add new note:</label>
+    <form action="/add_note" method="POST" class="form-2">
         <div class="table">
             <textarea placeholder="Type here..." type="text" name="note" style="width: 100%; height: 150px;"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="margin-bottom: 40px;" name="task_id" value="{{ task_id }}">Add note</button>
-        </form>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 40px;" name="task_id"
+            value="{{ task_id }}">Add note</button>
+    </form>
 </center>
 {% endblock %}
