@@ -519,3 +519,27 @@ def approval():
 
     # NEED TO FIX THIS
     return render_template("edit_task.html", task_id=task_id, creator_id=creator_id, executor_id=executor_id, heading=heading, description=description, creation_date=creation_date, deadline=deadline, status=status, creator_name=creator_name, executor_name=executor_name, notes=notes, pending=pending)
+
+@app.route("/administrator", methods=["POST"])
+def administrator():
+    decision = request.form.get("decision")
+    user_id = request.form.get("user_id")
+
+    # Connecting to DB
+    connection = sqlite3.connect('data.db')
+    db = connection.cursor()
+    if decision == 'add':
+        db.execute("UPDATE users SET administrator = '1' WHERE user_id = ?", user_id)
+        connection.commit()
+        connection.close()
+    elif decision == 'pass':
+        db.execute("UPDATE users SET administrator = '1' WHERE user_id = ?", user_id)
+        db.execute("UPDATE users SET administrator = '0' WHERE user_id = ?", (session["user_id"],))
+        connection.commit()
+        connection.close()
+    elif decision == 'delete':
+        db.execute("UPDATE users SET administrator = '0' WHERE user_id = ?", user_id)
+        connection.commit()
+        connection.close()
+    return redirect("/relations")
+        

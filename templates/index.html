@@ -341,7 +341,7 @@ Task Manager
         {% else %}
 
         <!-- Pending tasks waiting for your approval -->
-        {% if creatorSum[0] != 0 %}
+        {% if creatorSum[0] != 0 and creatorSum[0] is not none %}
         <h4 style="margin-left: 5px; color: #FF6347"> Waiting for <b>your</b> approval: </h4>
         {% for row in creator %}
         {% if row[1] != row[2] and row[8] == 1 %}
@@ -396,7 +396,7 @@ Task Manager
         {% endif %}
 
         <!-- Pending tasks waiting for creator approval -->
-        {% if executorSum[0] != 0 %}
+        {% if executorSum[0] != 0 and executorSum[0] is not none %}
         <h4 style="margin-left: 5px; color: #FF6347"> Waiting for <b>task creator</b> approval:</h4>
         {% for row in executor %}
         {% if row[1] != row[2] and row[8] == 1 %}

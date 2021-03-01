@@ -9,6 +9,7 @@ Task Manager
 <hr>
 <div class="container-1">
     <center>
+        {% if user[5] == 1 %}
         <div>
             <form class="border" action="/relations" method="POST">
                 <h3>Assign subordinate for supervisor</h3>
@@ -35,6 +36,7 @@ Task Manager
                 {% endif %}
             </form>
         </div>
+
         <div>
             <form class="border" action="/unassign" method="POST" style="margin-top: 20px;">
                 <h3>Unassign supervisor for subordinate</h3>
@@ -62,6 +64,7 @@ Task Manager
             </form>
         </div>
         <hr>
+        {% endif %}
         <h4 style="margin-top: 30px;"><b>"{{ rows[0][4] }}" structure</b></h4>
         <table class="styled-table">
             <thead>
@@ -109,6 +112,26 @@ Task Manager
             {% endfor %}
             {% endif %}
         </table>
+        {% if user[5] == 1 %}
+        <hr>
+        <h4><b>Change administrator status.</b></h4>
+        <form action="/administrator" method="POST" style="margin-bottom: 50px;">
+            <select name="user_id">
+                {% if joined_rows is not none %}
+                {% for row in rows %}
+                <option value="{{ row[0]}}">{{ row[1] }}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
+            <br>
+            <button type="submit" class="btn btn-success" style="margin-top: 30px;" name="decision" value="add" data-bs-toggle="tooltip" data-bs-placement="top"
+             title="Add administrator status to selected user (keeping your status as administrator)">Add Administrator</button>
+            <button type="submit" class="btn btn-warning" style="margin-top: 30px;" name="decision" value="pass" data-bs-toggle="tooltip" data-bs-placement="top"
+             title="You will lose your status as 'administrator' passing it to selected user.">Pass administrator</button>
+             <button type="submit" class="btn btn-danger" name="decision" style="margin-top: 30px;" value="delete" data-bs-toggle="tooltip" data-bs-placement="top"
+             title="You will delete 'administartor' status for selected user">Delete administrator</button>
+        </form>
+        {% endif %}
     </center>
 </div>
 
